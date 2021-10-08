@@ -2,7 +2,7 @@
   "name": "basic_surround_with_typescript",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://may27oliver.github.io/marquee_test/",
+  "homepage": "https://may27oliver.github.io/Marquee_test/",
   "dependencies": {
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
