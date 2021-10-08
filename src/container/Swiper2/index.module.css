@@ -1,0 +1,45 @@
+.hello {
+  color: pink;
+}
+
+.marquee-left-container,
+.marquee-right-container {
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.marquee-left-container .marquee-item {
+  display: inline-block;
+  padding-left: 100%;
+  font-size: 80px;
+  color: #fff;
+  animation: scroll 10s infinite linear;
+  -webkit-animate: scroll 10s infinite linear;
+}
+
+.marquee-right-container .marquee-item {
+  display: inline-block;
+  padding-left: 100%;
+  font-size: 80px;
+  color: #fff;
+  animation: scrollRight 10s infinite linear;
+  -webkit-animate: scrollRight 10s infinite linear;
+}
+
+@keyframes scroll {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(-100%, 0);
+  }
+}
+
+@keyframes scrollRight {
+  0% {
+    transform: translate(-100%, 0);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
