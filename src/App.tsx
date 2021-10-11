@@ -4,7 +4,7 @@ import { HashRouter as Router, Switch, Route } from "react-router-dom";
 import "./App.css";
 import Swiper1 from "./container/Swiper1";
 import Swiper2 from "./container/Swiper2";
-import Part3 from "./container/part3";
+import Swiper3 from "./container/Swiper3";
 import Part4 from "./container/part4";
 
 const App: React.FC = () => {
@@ -12,6 +12,7 @@ const App: React.FC = () => {
     <div className="App">
       <Swiper1 swipername={"Swiper1"} />
       <Swiper2 />
+      <Swiper3 />
     </div>
   );
 };

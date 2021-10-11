@@ -34,12 +34,12 @@ const Part1: React.FC<swiperprops> = ({ swipername }) => {
           loop={true}
           spaceBetween={0}
           centeredSlides={false}
-          speed={1000}
-          autoplay={{ delay: 0.1, reverseDirection: true }}
+          speed={6000}
+          autoplay={{ delay: 1, reverseDirection: true }}
           slidesPerView={5}
           allowTouchMove={false}
-          onSlideChange={() => console.log("slide change")}
-          onSwiper={(swiper) => console.log(swiper)}
+          onSlideChange={() => {}}
+          onSwiper={(swiper) => {}}
           className={cx("swiper-container")}
         >
           {slides}

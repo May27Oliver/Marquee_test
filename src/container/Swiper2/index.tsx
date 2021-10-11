@@ -13,10 +13,18 @@ const Part2: React.FC = () => {
       {/* <marquee behavior="scroll" direction="left">
         Hello World
       </marquee> */}
-      <div className={cx("marquee-left-container")}>
-        <div className={cx("marquee-item")}>
-          Cow夭～Cow夭～Cow夭～Cow夭～Cow夭～Cow夭～
-        </div>
+      <div className={cx("marquee-container")}>
+        <span className={cx("marquee-wrap")}>
+          <span>
+            <div className={cx("marquee-item")}>Cow夭～</div>
+            <div className={cx("marquee-item")}>Cow夭～</div>
+          </span>
+          <span>
+            <div className={cx("marquee-item")}>Cow夭～</div>
+            <div className={cx("marquee-item")}>Cow夭～</div>
+          </span>
+          {/*  <div className={cx("marquee-item")}>Cow夭～</div> */}
+        </span>
       </div>
       <div className={cx("marquee-right-container")}>
         <div className={cx("marquee-item")}>
