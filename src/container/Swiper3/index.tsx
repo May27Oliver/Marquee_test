@@ -1,7 +1,7 @@
 import React from "react";
 import classNames from "classnames/bind";
 import styles from "./index.module.css";
-import { gsap, Bounce, Power2, Power1 } from "gsap";
+import { gsap } from "gsap";
 
 const cx = classNames.bind(styles);
 
@@ -32,7 +32,7 @@ const Swiper3: React.FC = () => {
     gsap.to(`.${cx("box2")}`, {
       duration: 5,
       ease: "none",
-      x: "+=500", //move each box 500px to right
+      x: "+=500", //move each box 500px to left
       modifiers: {
         x: gsap.utils.unitize((x) => parseFloat(x) % 500), //force x value to be between 0 and 500 using modulus
       },
