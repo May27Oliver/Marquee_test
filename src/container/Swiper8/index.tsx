@@ -22,16 +22,8 @@ interface stockListType {
   list: stockInfoType[];
 }
 
-const Swiper6: React.FC<stockListType> = ({ list }) => {
+const Swiper8: React.FC<stockListType> = ({ list }) => {
   const [boxwidth, setBoxWidth] = React.useState<number | null>(null);
-  // const marquee = keyframes`
-  //   0%{
-  //     left:${boxwidth ? boxwidth + "px" : "100%"}
-  //   }
-  //   100%{
-  //     left:${boxwidth ? "-" + boxwidth + "px" : "-100%"}
-  //   }
-  // `;
   const marquee = keyframes`
     0%{
       left:3840px
@@ -46,7 +38,7 @@ const Swiper6: React.FC<stockListType> = ({ list }) => {
     padding: 0;
     margin: 0;
     width: ${boxwidth ? boxwidth + "px" : "100%"};
-    animation: 40s ${marquee} linear infinite;
+    animation: 20s ${marquee} linear infinite;
   `;
 
   let stockItems = document.getElementsByClassName(cx("stock-item"));
@@ -109,4 +101,4 @@ const Swiper6: React.FC<stockListType> = ({ list }) => {
   );
 };
 
-export default Swiper6;
+export default Swiper8;

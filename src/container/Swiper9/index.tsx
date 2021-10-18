@@ -1,11 +1,7 @@
 import React from "react";
 import classNames from "classnames/bind";
 import styles from "./index.module.css";
-import { useHistory } from "react-router";
-import Bear from "assets/image/bear.png";
-import Bull from "assets/image/bull.png";
 import styled, { keyframes } from "styled-components";
-import { gsap } from "gsap";
 
 const cx = classNames.bind(styles);
 interface stockInfoType {
@@ -22,19 +18,11 @@ interface stockListType {
   list: stockInfoType[];
 }
 
-const Swiper6: React.FC<stockListType> = ({ list }) => {
+const Swiper9: React.FC<stockListType> = ({ list }) => {
   const [boxwidth, setBoxWidth] = React.useState<number | null>(null);
-  // const marquee = keyframes`
-  //   0%{
-  //     left:${boxwidth ? boxwidth + "px" : "100%"}
-  //   }
-  //   100%{
-  //     left:${boxwidth ? "-" + boxwidth + "px" : "-100%"}
-  //   }
-  // `;
   const marquee = keyframes`
     0%{
-      left:3840px
+      left:1280px
     }
     100%{
       left:${boxwidth ? "-" + boxwidth + "px" : "-100%"}
@@ -46,7 +34,7 @@ const Swiper6: React.FC<stockListType> = ({ list }) => {
     padding: 0;
     margin: 0;
     width: ${boxwidth ? boxwidth + "px" : "100%"};
-    animation: 40s ${marquee} linear infinite;
+    animation: 30s ${marquee} linear infinite;
   `;
 
   let stockItems = document.getElementsByClassName(cx("stock-item"));
@@ -109,4 +97,4 @@ const Swiper6: React.FC<stockListType> = ({ list }) => {
   );
 };
 
-export default Swiper6;
+export default Swiper9;

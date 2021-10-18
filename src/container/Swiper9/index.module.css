@@ -10,7 +10,7 @@
 .stocks-container {
   background: #111;
   height: 128px;
-  width: 3840px;
+  width: 1280px;
   overflow: hidden;
   position: relative;
 }
@@ -29,6 +29,14 @@
   text-align: left;
   color: white;
   margin-bottom: 10px;
+}
+.stock-boxes {
+  position: absolute;
+  width: 4400px;
+  padding: 0;
+  margin: 0;
+  text-align: start;
+  animation: marquee 20s linear infinite;
 }
 .stock-title {
   font-size: 75px;
@@ -77,4 +85,15 @@
   border-bottom: 20px solid white;
   border-right: 10px solid transparent;
   border-left: 10px solid transparent;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(4250px);
+    /* left: 4350px; */
+  }
+  100% {
+    transform: translateX(-4250px);
+    /* left: -4250px; */
+  }
 }
