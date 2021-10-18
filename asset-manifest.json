@@ -1,25 +1,24 @@
 {
   "files": {
-    "main.css": "/Marquee_test/static/css/main.bc546eb1.chunk.css",
-    "main.js": "/Marquee_test/static/js/main.77289a0d.chunk.js",
-    "main.js.map": "/Marquee_test/static/js/main.77289a0d.chunk.js.map",
-    "runtime-main.js": "/Marquee_test/static/js/runtime-main.a6d5bf30.js",
-    "runtime-main.js.map": "/Marquee_test/static/js/runtime-main.a6d5bf30.js.map",
-    "static/css/2.a1ef74c9.chunk.css": "/Marquee_test/static/css/2.a1ef74c9.chunk.css",
-    "static/js/2.4b876d77.chunk.js": "/Marquee_test/static/js/2.4b876d77.chunk.js",
-    "static/js/2.4b876d77.chunk.js.map": "/Marquee_test/static/js/2.4b876d77.chunk.js.map",
-    "static/js/3.a650d64d.chunk.js": "/Marquee_test/static/js/3.a650d64d.chunk.js",
-    "static/js/3.a650d64d.chunk.js.map": "/Marquee_test/static/js/3.a650d64d.chunk.js.map",
+    "main.css": "/Marquee_test/static/css/main.02af0762.chunk.css",
+    "main.js": "/Marquee_test/static/js/main.e1ad9844.chunk.js",
+    "main.js.map": "/Marquee_test/static/js/main.e1ad9844.chunk.js.map",
+    "runtime-main.js": "/Marquee_test/static/js/runtime-main.272f8b4f.js",
+    "runtime-main.js.map": "/Marquee_test/static/js/runtime-main.272f8b4f.js.map",
+    "static/js/2.000240f3.chunk.js": "/Marquee_test/static/js/2.000240f3.chunk.js",
+    "static/js/2.000240f3.chunk.js.map": "/Marquee_test/static/js/2.000240f3.chunk.js.map",
+    "static/js/3.61f690bb.chunk.js": "/Marquee_test/static/js/3.61f690bb.chunk.js",
+    "static/js/3.61f690bb.chunk.js.map": "/Marquee_test/static/js/3.61f690bb.chunk.js.map",
     "index.html": "/Marquee_test/index.html",
-    "static/css/2.a1ef74c9.chunk.css.map": "/Marquee_test/static/css/2.a1ef74c9.chunk.css.map",
-    "static/css/main.bc546eb1.chunk.css.map": "/Marquee_test/static/css/main.bc546eb1.chunk.css.map",
-    "static/js/2.4b876d77.chunk.js.LICENSE.txt": "/Marquee_test/static/js/2.4b876d77.chunk.js.LICENSE.txt"
+    "static/css/main.02af0762.chunk.css.map": "/Marquee_test/static/css/main.02af0762.chunk.css.map",
+    "static/js/2.000240f3.chunk.js.LICENSE.txt": "/Marquee_test/static/js/2.000240f3.chunk.js.LICENSE.txt",
+    "static/media/bear.b96c2975.png": "/Marquee_test/static/media/bear.b96c2975.png",
+    "static/media/bull.a3dc31f5.png": "/Marquee_test/static/media/bull.a3dc31f5.png"
   },
   "entrypoints": [
-    "static/js/runtime-main.a6d5bf30.js",
-    "static/css/2.a1ef74c9.chunk.css",
-    "static/js/2.4b876d77.chunk.js",
-    "static/css/main.bc546eb1.chunk.css",
-    "static/js/main.77289a0d.chunk.js"
+    "static/js/runtime-main.272f8b4f.js",
+    "static/js/2.000240f3.chunk.js",
+    "static/css/main.02af0762.chunk.css",
+    "static/js/main.e1ad9844.chunk.js"
   ]
 }
