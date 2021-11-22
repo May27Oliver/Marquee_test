@@ -1,6 +1,7 @@
 .stock-item {
   color: white;
   /* width: 600px; */
+  background: black;
   display: inline-block;
   height: 128px;
   margin-right: 50px;
@@ -19,8 +20,12 @@
 }
 .stock-title-box {
   height: 100%;
+  line-height: 128px;
   display: flex;
   flex-direction: column;
+  font-size: 75px;
+  font-weight: 900;
+  color: white;
 }
 .stock-no {
   font-size: 25px;
@@ -38,17 +43,11 @@
   text-align: start;
   animation: marquee 20s linear infinite;
 }
-.stock-title {
-  font-size: 75px;
-  line-height: 80px;
-  font-weight: 900;
-  color: white;
-}
 .stock-data {
   height: 128px;
   display: flex;
   flex-direction: column;
-  margin: 0 20px;
+  margin: 0 0 0 20px;
 }
 .price-and-num {
   display: flex;
@@ -64,6 +63,7 @@
   margin-right: 40px;
 }
 .pic-box {
+  margin: 15px 0;
   width: 135px;
 }
 

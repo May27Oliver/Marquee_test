@@ -16,6 +16,36 @@ module.exports = {
       ...config.resolve.alias,
       ...folderInsideSrc,
     };
+
+    //For React Hot Loader
+    if (env !== "production") {
+      config = require("react-app-rewire-hot-loader")(config, env);
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        "react-dom": "@hot-loader/react-dom",
+      };
+    }
+
+    //For Postcss
+    require("react-app-rewire-postcss")(config, {
+      plugins: (loader) => [
+        require("postcss-import")({
+          path: ["./src/static/styles"],
+        }),
+        require("postcss-flexbugs-fixes"),
+        require("postcss-preset-env")({
+          autoprefixer: {
+            flexbox: "no-2009",
+          },
+          stage: 3,
+        }),
+        require("postcss-simple-vars")(),
+        require("postcss-color-function")(),
+        require("postcss-nested-ancestors")(),
+        require("postcss-nested")(),
+      ],
+    });
+
     return config;
   },
   devSever: function (configFunction) {

@@ -2,6 +2,7 @@ import React from "react";
 import classNames from "classnames/bind";
 import styles from "./index.module.css";
 import styled, { keyframes } from "styled-components";
+import QuoteInfo from "component/QuoteInfo";
 
 const cx = classNames.bind(styles);
 interface stockInfoType {
@@ -20,21 +21,20 @@ interface stockListType {
 
 const Swiper9: React.FC<stockListType> = ({ list }) => {
   const [boxwidth, setBoxWidth] = React.useState<number | null>(null);
-  const marquee = keyframes`
-    0%{
-      left:1280px
-    }
-    100%{
-      left:${boxwidth ? "-" + boxwidth + "px" : "-100%"}
-    }
-  `;
+  // const marquee = keyframes`
+  //   0%{
+  //     left:1280px
+  //   }
+  //   100%{
+  //     left:${boxwidth ? "-" + boxwidth + "px" : "-100%"}
+  //   }
+  // `;animation: 30s ${marquee} linear infinite;
 
   const MarqueeUl = styled.ul`
     position: absolute;
     padding: 0;
     margin: 0;
     width: ${boxwidth ? boxwidth + "px" : "100%"};
-    animation: 30s ${marquee} linear infinite;
   `;
 
   let stockItems = document.getElementsByClassName(cx("stock-item"));
@@ -63,22 +63,14 @@ const Swiper9: React.FC<stockListType> = ({ list }) => {
                   <div className={cx("stock-title")}>{item.title}</div>
                 </div>
                 <div className={cx("stock-data")}>
-                  <div
-                    className={cx(
-                      "change-num",
-                      item.up ? "red-words" : "green-words"
-                    )}
-                  >
-                    {item.up
-                      ? "+" + item.consumerate + "%"
-                      : "-" + item.consumerate + "%"}
-                  </div>
-                  <div className={cx("price-and-num")}>
-                    <div className={cx("stock-price")}>{item.price}</div>
-                    <div className={cx("stock-consumeNum")}>
-                      {item.consumeNum}
-                    </div>
-                  </div>
+                  <QuoteInfo
+                    price={+item.price}
+                    upDown={+item.consumeNum}
+                    upDownRate={0.13}
+                    fractionDigits={0}
+                    denominator={1}
+                    className=""
+                  />
                 </div>
                 <div
                   className={cx("pic-box")}

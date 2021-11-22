@@ -8,7 +8,7 @@
   list-style: none;
 }
 .stocks-container {
-  background: #111;
+  background: black;
   height: 128px;
   width: 1280px;
   overflow: hidden;

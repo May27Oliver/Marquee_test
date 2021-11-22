@@ -6,6 +6,7 @@ import Bear from "assets/image/bear.png";
 import Bull from "assets/image/bull.png";
 import styled, { keyframes } from "styled-components";
 import { gsap } from "gsap";
+import QuoteInfo from "component/QuoteInfo";
 
 const cx = classNames.bind(styles);
 interface stockInfoType {
