@@ -2,25 +2,30 @@ import React from "react";
 
 import { Quote } from "model/Quote";
 
-import useSingleQuote, { UseSingleQuoteParams } from "hooks/useSingleQuote";
+import useMultiQuotes, { UseMultiQuotesParams } from "hooks/useMultiQuotes";
 import { useApexStateContext } from "context/Apex";
 import LoadingOverlay from "component/LoadingOverlay";
 
-export interface SingleQuoteProps
-  extends Omit<UseSingleQuoteParams, "sessionId"> {
-  children: (quote: Quote) => React.ReactElement<any, any> | null;
+export interface MultiQuoteProps
+  extends Omit<UseMultiQuotesParams, "sessionId"> {
+  callback(): void;
+  children: (quote: Quote[]) => React.ReactElement<any, any>[] | null;
 }
-const SingleQuote: React.FC<SingleQuoteProps> = ({ symbol, children }) => {
+const MultiQuotes: React.FC<MultiQuoteProps> = ({
+  symbols,
+  callback,
+  children,
+}) => {
   const { masterSessionId } = useApexStateContext();
   const {
     loading,
-    value: quote,
+    value: quotes,
     error,
-  } = useSingleQuote({
-    symbol,
+  } = useMultiQuotes({
+    symbols,
     sessionId: masterSessionId,
   });
-  if (error || !quote) {
+  if (error || !quotes) {
     // debugger;
     return (
       <div
@@ -36,12 +41,13 @@ const SingleQuote: React.FC<SingleQuoteProps> = ({ symbol, children }) => {
       </div>
     );
   }
+  callback?.();
   return (
     <>
       {loading && <LoadingOverlay isOpen />}
-      {children(quote)}
+      {children(quotes)}
     </>
   );
 };
 
-export default SingleQuote;
+export default MultiQuotes;
