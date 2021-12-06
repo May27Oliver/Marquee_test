@@ -2,6 +2,8 @@ import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretUp } from "@fortawesome/free-solid-svg-icons";
 import classNames from "classnames/bind";
+import anime from "animejs";
+import { useUpdateEffect } from "react-use";
 
 import { priceFormatterFactory } from "tools/formatter";
 
@@ -53,12 +55,21 @@ const QuoteInfo: React.FC<QuoteInfoProps> = ({
     <div className={`${cx("container")} ${className}`}>
       <div className={cx("row", "top")}>
         <div className={`${cx("up-down", color)} left`}>
-          {`${upDownRateDisplay}%`}
+          <AnimationBottomBorder compareValue={upDownRateDisplay}>
+            {`${upDownRateDisplay}%`}
+          </AnimationBottomBorder>
         </div>
       </div>
       <div className={cx("row", "bottom")}>
-        <div className={`${cx("price", "left", color)} `}>{priceDisplay}</div>
-        <div className={cx("price", "right", "up-down-diff", color)}>
+        <div className={`${cx("price", "left", color)} `}>
+          <AnimationBottomBorder compareValue={priceDisplay}>
+            {priceDisplay}
+          </AnimationBottomBorder>
+        </div>
+        <div
+          className={cx("price", "right", "up-down-diff", color)}
+          style={{ textAlign: "right" }}
+        >
           {upDown && upDown !== 0 ? (
             <FontAwesomeIcon
               icon={faCaretUp}
@@ -68,7 +79,9 @@ const QuoteInfo: React.FC<QuoteInfoProps> = ({
             ""
           )}
           <div className={cx("upDownDisplay")}>
-            {upDown === 0 ? "--" : upDownDisplay}
+            <AnimationBottomBorder compareValue={upDownDisplay}>
+              {upDown === 0 ? "--" : upDownDisplay}
+            </AnimationBottomBorder>
           </div>
         </div>
       </div>
@@ -76,4 +89,38 @@ const QuoteInfo: React.FC<QuoteInfoProps> = ({
   );
 };
 
+interface AnimationBottomBorderProps {
+  compareValue: any;
+}
+
+const AnimationBottomBorder: React.FC<
+  AnimationBottomBorderProps &
+    React.DetailedHTMLProps<
+      React.HTMLAttributes<HTMLDivElement>,
+      HTMLDivElement
+    >
+> = ({ compareValue, className = "", children, ...rest }) => {
+  const ref = React.useRef<HTMLDivElement>(null);
+  useUpdateEffect(() => {
+    anime({
+      targets: ref.current,
+      opacity: [
+        { value: 1, duration: 200 },
+        { value: 0, duration: 200 },
+      ],
+      easing: "linear",
+    });
+  }, [compareValue]);
+  return (
+    <div className={cx("animate-wrap")}>
+      <div
+        className={[cx("animate-bottom-border"), className].join(" ")}
+        {...rest}
+      >
+        <div>{children}</div>
+        <div ref={ref} className={cx("border")}></div>
+      </div>
+    </div>
+  );
+};
 export default QuoteInfo;

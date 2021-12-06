@@ -1,26 +1,9 @@
 .container {
-  display: flex;
-  flex-direction: column;
-  padding: 10px 6px;
-  box-sizing: border-box;
-
-  .row {
-    display: flex;
-
-    &:first-of-type {
-      margin-bottom: 5px;
-    }
-
-    .left {
-      width: 40%;
-    }
-    .right {
-      width: 60%;
-    }
-  }
+  flex: 0 0 300px;
 }
 .container .row {
   display: flex;
+  margin-top: 10px;
 }
 .container .row.top {
   justify-content: flex-end;
@@ -40,6 +23,7 @@
 }
 .price {
   display: flex;
+  flex: 1;
   align-items: center;
   justify-content: center;
   font-size: 35px;
@@ -87,4 +71,13 @@
 }
 .upDownDisplay {
   margin-left: 5px;
+  text-align: right;
+}
+.animate-wrap {
+  position: relative;
+}
+
+.animate-bottom-border .border {
+  border-bottom: solid 2px skyblue;
+  opacity: 0;
 }

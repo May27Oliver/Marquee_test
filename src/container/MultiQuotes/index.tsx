@@ -1,15 +1,15 @@
 import React from "react";
-
-import { Quote } from "model/Quote";
-
-import useMultiQuotes, { UseMultiQuotesParams } from "hooks/useMultiQuotes";
+import useMultiQuotes, {
+  UseMultiQuoteParams,
+  QuoteMap,
+} from "hooks/useMultiQuotes";
 import { useApexStateContext } from "context/Apex";
 import LoadingOverlay from "component/LoadingOverlay";
 
 export interface MultiQuoteProps
-  extends Omit<UseMultiQuotesParams, "sessionId"> {
+  extends Omit<UseMultiQuoteParams, "sessionId"> {
   callback(): void;
-  children: (quote: Quote[]) => React.ReactElement<any, any>[] | null;
+  children: (quote: QuoteMap) => React.ReactElement<any, any>[] | null;
 }
 const MultiQuotes: React.FC<MultiQuoteProps> = ({
   symbols,

@@ -1,19 +1,16 @@
 .stock-item {
   color: white;
-  position: absolute;
-  top: 0;
-  right: -674px;
-  background: black;
+  /* width: 600px; */
   display: inline-block;
   height: 128px;
-  width: 674px;
+  margin-right: 50px;
   text-decoration: none;
   list-style: none;
 }
 .stocks-container {
-  background: #111;
-  height: 128px;
-  /* width: 1280px; */
+  background: black;
+  height: 100%;
+  width: 3840px;
   overflow: hidden;
   position: relative;
 }
@@ -22,20 +19,8 @@
 }
 .stock-title-box {
   height: 100%;
-  line-height: 128px;
   display: flex;
-  width: 239px;
   flex-direction: column;
-  font-size: 75px;
-  font-weight: 900;
-  color: white;
-}
-.stock-title-box.oversize {
-  font-size: 50px;
-  line-height: 1.2;
-  text-align: left;
-  padding-left: 10px;
-  padding-top: 10px;
 }
 .stock-no {
   font-size: 25px;
@@ -53,11 +38,17 @@
   text-align: start;
   animation: marquee 20s linear infinite;
 }
+.stock-title {
+  font-size: 75px;
+  line-height: 80px;
+  font-weight: 900;
+  color: white;
+}
 .stock-data {
   height: 128px;
   display: flex;
   flex-direction: column;
-  margin: 0 0 0 20px;
+  margin: 0 20px;
 }
 .price-and-num {
   display: flex;
@@ -73,7 +64,6 @@
   margin-right: 40px;
 }
 .pic-box {
-  margin: 15px 0;
   width: 135px;
 }
 
@@ -95,4 +85,39 @@
   border-bottom: 20px solid white;
   border-right: 10px solid transparent;
   border-left: 10px solid transparent;
+}
+
+.stock-ship {
+  position: absolute;
+  padding: 0;
+  margin: 0;
+  width: 674px;
+  animation: marquee 60s linear infinite;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translate(3840px, 0);
+  }
+  25% {
+    transform: translate(-674px, 0);
+  }
+  25.1% {
+    transform: translate(-674px, 128px);
+  }
+  50% {
+    transform: translate(3840px, 128px);
+  }
+  50.1% {
+    transform: translate(3840px, 256px);
+  }
+  75% {
+    transform: translate(-674px, 256px);
+  }
+  75.1% {
+    transform: translate(-674px, 384px);
+  }
+  100% {
+    transform: translate(3840px, 384px);
+  }
 }

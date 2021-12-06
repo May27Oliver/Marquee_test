@@ -1,8 +1,5 @@
 .stock-item {
   color: white;
-  position: absolute;
-  top: 0;
-  right: -674px;
   background: black;
   display: inline-block;
   height: 128px;
@@ -13,7 +10,7 @@
 .stocks-container {
   background: #111;
   height: 128px;
-  /* width: 1280px; */
+  width: 1280px;
   overflow: hidden;
   position: relative;
 }
@@ -21,21 +18,13 @@
   display: flex;
 }
 .stock-title-box {
+  flex: 0 0 239px;
   height: 100%;
   line-height: 128px;
-  display: flex;
-  width: 239px;
-  flex-direction: column;
+  text-align: center;
   font-size: 75px;
   font-weight: 900;
   color: white;
-}
-.stock-title-box.oversize {
-  font-size: 50px;
-  line-height: 1.2;
-  text-align: left;
-  padding-left: 10px;
-  padding-top: 10px;
 }
 .stock-no {
   font-size: 25px;
@@ -74,7 +63,7 @@
 }
 .pic-box {
   margin: 15px 0;
-  width: 135px;
+  flex: 0 0 135px;
 }
 
 .green-words {

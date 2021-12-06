@@ -1,13 +1,13 @@
 import React, { useEffect } from "react";
-import moment from "moment-timezone";
 import classNames from "classnames/bind";
 import styles from "./index.module.css";
 import { Quote } from "model/Quote";
 import QuoteInfo from "component/QuoteInfo";
 import { useApexStateContext } from "context/Apex";
-import { filter } from "rxjs/operators";
+import { bufferTime, filter, map } from "rxjs/operators";
 import { TickSubject } from "websocket/quote";
 import { KLineSubject } from "websocket/quote/subject";
+import { debounceTime } from "rxjs/operators";
 
 import {
   Sparklines,
@@ -16,15 +16,14 @@ import {
 } from "react-sparklines";
 import api from "api";
 
+const K_LINE_DEBOUNCE_DURATION = 300; //480000
 const cx = classNames.bind(styles);
 interface StockInfoType {
   quote: Quote;
-  firstTimeStamp: number;
-  timeGap: number;
 }
 
 const Stock = React.forwardRef<HTMLLIElement, StockInfoType>(
-  ({ quote, firstTimeStamp, timeGap }, ref) => {
+  ({ quote }, ref) => {
     let { NameSlave, UpDown, UpDownRate, BidPrice } = quote;
     const [quoteInfo, setQuoteInfo] = React.useState({
       bidPrice: BidPrice,
@@ -33,6 +32,7 @@ const Stock = React.forwardRef<HTMLLIElement, StockInfoType>(
     });
     const { masterSessionId } = useApexStateContext();
     const [stockName] = NameSlave ? NameSlave.split(".") : [""];
+    console.log(stockName, "執行Stock");
     const priceDecimal = quote.PriceDec || 0;
     const [priceData, setPriceData] = React.useState<number[]>([
       quote.PrePrice || 0,
@@ -54,12 +54,13 @@ const Stock = React.forwardRef<HTMLLIElement, StockInfoType>(
         });
         let ticksData = ticks
           .filter((tick, index) => {
-            return index % 5 === 0; //五分鐘取一根
+            return index % 8 === 0; //八分鐘取一根
           })
           .map((tick) => tick.price);
         setPriceData((prev) => [...prev, ...ticksData]);
       })();
     }, [masterSessionId, priceDecimal, quote.Symbol]);
+
     //收Kline，更新線圖pipe(
     //  debounceTime(K_LINE_DEBOUNCE_DURATION)
     //)
@@ -68,28 +69,13 @@ const Stock = React.forwardRef<HTMLLIElement, StockInfoType>(
         if (newKLine.symbol !== quote.Symbol) {
           return;
         }
-        //找出是哪個時間點的price需要更換
-        const indexNeedChange = Math.floor(
-          (newKLine.tickTime - firstTimeStamp) / timeGap
-        );
-        console.log("newKLine tickTime", new Date(newKLine.tickTime));
-        console.log("indexNeedChange", indexNeedChange);
-        // 算出price
         let price = parseFloat(newKLine.price) / delimiter;
-        setPriceData((prev) => {
-          return prev.map((oldPrice, index) => {
-            if (index === indexNeedChange) {
-              return price;
-            }
-            return oldPrice;
-          });
-        });
+        setPriceData((prev) => [...prev, price]);
       });
       return () => {
         subscriber.unsubscribe();
       };
     }, [priceDecimal]);
-
     //收Tick，更新QuoteInfo
     React.useEffect(() => {
       //改成state
@@ -114,14 +100,7 @@ const Stock = React.forwardRef<HTMLLIElement, StockInfoType>(
     return (
       <li className={cx("stock-item")} ref={ref}>
         <div className={cx("stock-item-wrap")}>
-          <div
-            className={cx(
-              "stock-title-box",
-              stockName.length < 4 ? "" : "oversize"
-            )}
-          >
-            {stockName}
-          </div>
+          <div className={cx("stock-title-box")}>{stockName}</div>
           <QuoteInfo
             price={quoteInfo.bidPrice}
             upDown={quoteInfo.upDown}
@@ -133,7 +112,7 @@ const Stock = React.forwardRef<HTMLLIElement, StockInfoType>(
           <div className={cx("pic-box")}>
             <Sparklines
               data={priceData}
-              limit={50}
+              limit={40}
               width={100}
               height={70}
               margin={5}

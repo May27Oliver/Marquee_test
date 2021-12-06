@@ -1,7 +1,8 @@
 import React from "react";
 import { hot } from "react-hot-loader/root";
 import "./App.css";
-import Stock from "container/Stock";
+import SingleSpeedTrain from "container/SingleSpeedTrain";
+import AnimeSpeedTrain from "container/AnimeCSpeedTrain";
 import SockJs from "sockjs-client";
 
 import {
@@ -101,18 +102,35 @@ const App: React.FC = () => {
   useConnectSlaveQuoteSocket();
   return (
     <div className="App">
-      <CSpeedTrain
+      {/* <SingleSpeedTrain symbols={["2330.TW"]} /> */}
+      <AnimeSpeedTrain
         symbols={[
           "2330.TW",
           "0050.TW",
-          "2883.TW",
-          "4938.TW",
-          "00881.TW",
           "2481.TW",
-          "2701.TW",
+          "2382.TW",
+          "4938.TW",
+          "2201.TW",
+          "1101.TW",
+          "2002.TW",
+          "2353.TW",
+          "2880.TW",
+          "2890.TW",
+          "2317.TW",
+          "3034.TW",
+          "5210.TW",
+          "2338.TW",
+          "2615.TW",
+          "2882.TW",
+          "2881.TW",
+          "2889.TW",
+          "2327.TW",
+          "2301.TW",
+          "2801.TW",
+          "6183.TW",
+          "2885.TW",
         ]}
       />
-      {/* <Stock symbol={"2701.TW"} /> */}
     </div>
   );
 };
