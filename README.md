@@ -23,3 +23,17 @@
 
 6.製作線圖，收 Tick，8 秒 render 一次，從開盤到收盤早上九點到下午一點，一分 K 總共會有 240 根左右的 KLine，只取 30 根，亦即大概 8 分鐘取一根。
 先做一個有 30 個元素的陣列，api 取 KLine 時，把 KLine 收盤價 以 8 分為單位安插入陣列，剩下陣列的空值由 socket 的資料填入，然後 socket 取到 KLine 資料時要去更換當下時間最近的那根 KLine 的收盤價。
+
+7.12/6 修改 gsap 動畫為單 timeline 後發現 chrome dev tool 內 performance 的效率很低，出現很多 cls 警告，原因為 socket 資料處理與畫面渲染彼此搶資料，故決定導入 redux 讓 model 與 view 分開，所有 500 檔商品資料在 redux 內進行 socket 資料處理，然後 view 再定時跟 redux 取資料更新畫面即可。
+
+8.12/7 研究 rx.js，如何把握到註冊與解註冊的 timing，收 socket 不能一根一根跑，rx 能否過濾每一支商品？可以，在每個 stock component 內訂閱 socket 並 pipe(filter & throttleTime)即可
+
+9.進行註冊與解註冊的功能建構，一次註冊 30 檔，並在特定時間進行 sliding window 註冊。
+
+10.在個別 component getQuote，不知能否限定 api 不因為 component 重新 render 而重複呼叫。
+
+11.在個別 component 內呼叫 api 結果資料回來量太大取不到
+
+12.12/10sliding_window 取 Quote 註冊功能完成。
+
+13.[Bug]線圖在重新註冊後會 double。

@@ -33,13 +33,13 @@ export const register = async (
 
   // debugger
   const results = await Promise.all([
-    axios.post<RegisterResponse>(
-      `/api/reg`,
-      JSON.stringify({ SessionId: masterSessionId, ...baseRequestData }),
-      {
-        baseURL: getEnv("QUOTE_MASTER_URL"),
-      }
-    ),
+    // axios.post<RegisterResponse>(
+    //   `/api/reg`,
+    //   JSON.stringify({ SessionId: masterSessionId, ...baseRequestData }),
+    //   {
+    //     baseURL: getEnv("QUOTE_MASTER_URL"),
+    //   }
+    // ),
     axios.post<RegisterResponse>(
       `/api/reg`,
       JSON.stringify({ SessionId: slaveSessionId, ...baseRequestData }),

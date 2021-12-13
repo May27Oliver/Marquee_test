@@ -1,15 +1,9 @@
 import React from "react";
 import { useSetState, useMountedState } from "react-use";
-import { merge } from "rxjs";
-import { bufferTime, filter, map } from "rxjs/operators";
-
 import { AsyncState } from "react-use/lib/useAsync";
 import { Quote } from "model/Quote";
-import { TickMessage } from "websocket/quote";
-
 import api from "api";
 import { isVirtualSymbol } from "tools/isVirtualSymbol";
-import { TickSubject } from "websocket/quote";
 
 export interface UseMultiQuoteParams {
   symbols: string[];
@@ -28,7 +22,6 @@ export const useMultiQuotes = function ({
   const [state, setState] = useSetState<AsyncState<QuoteMap>>({
     loading: true,
   });
-  const { loading, error } = state;
   const priceDecimalDictionaryRef = React.useRef<{ [symbol: string]: number }>(
     {}
   );

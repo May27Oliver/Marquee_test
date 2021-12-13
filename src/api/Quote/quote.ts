@@ -272,7 +272,7 @@ export async function getQuotes(
     `/api/basicQuote`,
     requestData,
     {
-      baseURL: getEnv("QUOTE_MASTER_URL"),
+      baseURL: getEnv("QUOTE_SLAVE_URL"),
     }
   );
 

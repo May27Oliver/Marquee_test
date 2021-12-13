@@ -96,3 +96,16 @@
   border-right: 10px solid transparent;
   border-left: 10px solid transparent;
 }
+
+.unvisible-stock {
+  border: 1px solid red;
+  position: absolute;
+  top: 0;
+  right: -674px;
+  background: black;
+  display: inline-block;
+  height: 128px;
+  width: 674px;
+  text-decoration: none;
+  list-style: none;
+}
