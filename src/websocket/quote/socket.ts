@@ -81,7 +81,7 @@ export function connectWebSocket({ url, onClose }: Parameter) {
         handleGetKLineMessage(res);
         return;
       case Mode.UPDATE_EVENT:
-        // console.log('{ quote } web socket [onMessage]: "UPDATE_EVENT"', res);
+        console.log('{ quote } web socket [onMessage]: "UPDATE_EVENT"', res);
         handleGetUpdateEventMessage(res);
         return;
       default:

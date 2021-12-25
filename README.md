@@ -36,4 +36,18 @@
 
 12.12/10sliding_window 取 Quote 註冊功能完成。
 
-13.[Bug]線圖在重新註冊後會 double。
+13.[Bug]線圖在重新註冊後會 double，處理完畢，取消解構賦值。
+
+14.開始進行 golang 後端建置，使用 golang。
+
+15.golang net/http 和 gin 套件進行監聽 server 端的服務
+
+16.在 golang gin 設定 corse，暫且讓所有請求都回應。
+
+17.切後台網頁，預估作業有：a.匯入 csv 檔案功能 b.管理群組資訊，增刪改查 c.改變播放群組
+
+18. 12/23 匯入與新增 csv 與個股完成。
+
+19.查詢 speed 與查詢 groupname 尚未完成
+
+20.完成匯入新增更改群組播放查詢等功能

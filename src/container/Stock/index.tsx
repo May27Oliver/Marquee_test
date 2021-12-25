@@ -22,29 +22,31 @@ const Stock = React.forwardRef<HTMLLIElement, StockInfoType>(
         {quote ? (
           <VisiableStock
             symbol={symbol}
-            AppRef={AppRef}
             quote={quote}
             key={quote.NameSlave}
-            regMap={regMap}
             firstTimeStamp={firstTimeStamp}
             timeGap={timeGap}
           />
         ) : (
-          <UnvisibleStock />
+          <UnvisibleStock symbol={symbol} />
         )}
       </li>
     );
   }
 );
 interface UnvisibleStockType {
+  symbol: string;
   className?: string;
 }
 
-export const UnvisibleStock: React.FC<UnvisibleStockType> = ({ className }) => {
+export const UnvisibleStock: React.FC<UnvisibleStockType> = ({
+  className,
+  symbol,
+}) => {
   return (
     <>
       <div className={cx("stock-item-wrap")}>
-        <div className={cx("stock-title-box")}></div>
+        <div className={cx("stock-title-box")}>{symbol}</div>
         <div
           className={cx("QuoteInfo-container")}
           style={{ flex: "0 0 300px" }}

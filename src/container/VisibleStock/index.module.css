@@ -75,6 +75,11 @@
 .pic-box {
   margin: 15px 0;
   width: 135px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /* border-bottom: 1px solid #777;  */
 }
 
 .green-words {

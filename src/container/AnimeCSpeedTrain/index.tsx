@@ -5,11 +5,10 @@ import { useApexStateContext } from "context/Apex";
 import Stock from "container/Stock";
 import getMultiQuotes, { QuoteMap } from "./getMultiQuotes";
 import api from "api";
-import { gsap, Linear, TweenMax } from "gsap";
-import { symbol } from "prop-types";
-import { finished } from "stream";
+import { gsap, Linear } from "gsap";
 
 const cx = classNames.bind(styles);
+
 const FIRSTTIMESTAMP = new Date().setHours(9, 0, 0, 0);
 const LASTTIMESTAMP = new Date().setHours(13, 30, 0, 0);
 const PRICELENGTH = 50;
@@ -20,13 +19,6 @@ const SINGLE_MOVE_OUT_SPEED = (674 * LINE_SPEED) / 4515;
 const LAST_LINE_SPEED = (1955 * LINE_SPEED) / 4515;
 const SCREEN_WITH = 3840 + SINGLE_STOCK_WITH;
 const SINGLE_DELAY_TIME = (674 * LINE_SPEED) / SCREEN_WITH;
-const getDelayTime = (symbols: string[]) => {
-  if (symbols.length > 23) {
-    return (symbols.length - 23) * SINGLE_DELAY_TIME;
-  } else {
-    return 0;
-  }
-};
 
 const registInterval = SINGLE_MOVE_OUT_SPEED * 2 * 1000;
 const startInterval =
@@ -38,14 +30,14 @@ interface stockListType {
 }
 
 const AnimeCSpeedTrain: React.FC<stockListType> = ({ symbols }) => {
-  // symbols = symbols.concat(symbols.slice(0, 25));
   const { masterSessionId, slaveSessionId } = useApexStateContext();
   //計算sliding window的pointer
   const roundRef = React.useRef<number>(0);
-  //欲註冊的map || index >= symbols.length - 25
+  const repeatRef = React.useRef<boolean>(false);
+  //欲註冊的map
   const regMap = symbols.reduce<RegType>((acc, each, index) => {
     if (index < 30) {
-      //起始前三十個和後面鄰接上的25個都要是true
+      //起始前三十個都要是true
       acc[each] = { reg: true, index };
       return acc;
     }
@@ -55,7 +47,6 @@ const AnimeCSpeedTrain: React.FC<stockListType> = ({ symbols }) => {
   const RegRef = React.useRef<RegType>(regMap);
   const originScreenSymbols = symbols
     .map((symbol) => (RegRef.current[symbol].reg ? symbol : ""))
-    // .filter((el, index) => symbols.indexOf(el) === index)
     .filter(Boolean);
 
   const [onScreenSymbols, setOnScreenSymbols] =
@@ -67,7 +58,6 @@ const AnimeCSpeedTrain: React.FC<stockListType> = ({ symbols }) => {
       return createRef();
     })
   );
-  console.log("slide onScreenSymbols", onScreenSymbols);
 
   const sliding_window_counter = () => {
     clearInterval(counter);
@@ -83,14 +73,21 @@ const AnimeCSpeedTrain: React.FC<stockListType> = ({ symbols }) => {
           const disFromEnd = symbols.length - round;
           //如果逼近最後三十個，則不進行slide，pointer繼續往下
           if (disFromEnd < 30) {
-            console.log(
-              "sliding keep",
-              symbols[roundRef.current],
-              "no.",
-              roundRef.current
-            );
+            //sliding
+            RegRef.current = symbols.reduce<RegType>((acc, each, index) => {
+              if (index < 30 + round && index >= round && index < 30) {
+                acc[each] = { reg: true, index };
+                return acc;
+              }
+              acc[each] = { reg: false, index };
+              return acc;
+            }, {});
             roundRef.current = roundRef.current + 2;
             return;
+          } else if (disFromEnd < 2) {
+            //差距小於二就從零再開始
+            repeatRef.current = true;
+            roundRef.current = 0;
           }
           //sliding
           RegRef.current = symbols.reduce<RegType>((acc, each, index) => {
@@ -108,98 +105,12 @@ const AnimeCSpeedTrain: React.FC<stockListType> = ({ symbols }) => {
               .filter(Boolean)
           );
 
-          console.log(
-            "sliding continue",
-            symbols[roundRef.current],
-            "no.",
-            roundRef.current
-          );
           roundRef.current = roundRef.current + 2;
         }, registInterval);
       }, startInterval);
     });
   };
-
-  // const animationMarquee = () => {
-  //   setTimeout(() => {
-  //     const refs = stockRefs.current.map((item) => {
-  //       return item.current;
-  //     });
-  //     if (refs.includes(null)) {
-  //       window.requestAnimationFrame(animationMarquee);
-  //     } else {
-  //       const WHOLE_ANIMATION_SPEED_FOR_SINGLE_STOCK =
-  //         LINE_SPEED * 3 + LAST_LINE_SPEED;
-  //       const timeline = gsap.timeline({
-  //         repeat: -1,
-  //         onStart: () => {
-  //           console.log("sliding animate onStart ");
-  //           sliding_window_counter();
-  //         },
-  //         onRepeat: () => {
-  //           console.log("sliding animation onRepeat");
-  //           sliding_window_counter();
-  //         },
-  //       });
-
-  //       timeline.fromTo(
-  //         refs,
-  //         { x: 0, y: 0 },
-  //         {
-  //           x: -4515,
-  //           y: 0,
-  //           duration: LINE_SPEED,
-  //           ease: Linear.easeNone,
-  //           stagger: (index, target, list) => SINGLE_DELAY_TIME * index,
-  //         }
-  //       ); //左
-
-  //       timeline.fromTo(
-  //         refs,
-  //         { x: 0, y: 178 },
-  //         {
-  //           x: -4515,
-  //           y: 178,
-  //           duration: LINE_SPEED,
-  //           ease: Linear.easeNone,
-  //           stagger: (index, target, list) => SINGLE_DELAY_TIME * index,
-  //         },
-  //         LINE_SPEED.toString()
-  //       ); //左
-
-  //       timeline.fromTo(
-  //         refs,
-  //         { x: 0, y: 356 },
-  //         {
-  //           x: -4515,
-  //           y: 356,
-  //           duration: LINE_SPEED,
-  //           ease: Linear.easeNone,
-  //           stagger: (index, target, list) => SINGLE_DELAY_TIME * index,
-  //         },
-  //         (LINE_SPEED * 2).toString()
-  //       ); //左
-
-  //       timeline.fromTo(
-  //         refs,
-  //         { x: -2560, y: 534 },
-  //         {
-  //           x: -4515,
-  //           y: 534,
-  //           duration: LAST_LINE_SPEED,
-  //           ease: Linear.easeNone,
-  //           stagger: (index, target, list) => SINGLE_DELAY_TIME * index,
-  //         },
-  //         (LINE_SPEED * 3).toString()
-  //       );
-
-  //       // timeline.seek("first_achieve");
-
-  //       // timeline.add("first_achieve", WHOLE_ANIMATION_SPEED_FOR_SINGLE_STOCK);
-  //     }
-  //   }, 1000);
-  // };
-
+  //gsap animation
   const animationMarquee = () => {
     setTimeout(() => {
       const refs = stockRefs.current.map((item) => {
@@ -212,19 +123,17 @@ const AnimeCSpeedTrain: React.FC<stockListType> = ({ symbols }) => {
           LINE_SPEED * 3 + LAST_LINE_SPEED;
         const timeline = gsap
           .timeline({
-            repeat: -1,
             onStart: () => {
               console.log("sliding animate onStart ");
               sliding_window_counter();
             },
-            onRepeat: () => {
-              console.log("sliding animation onRepeat");
-              sliding_window_counter();
-            },
           })
-          .add("firstTimeLabel", `+=${WHOLE_ANIMATION_SPEED_FOR_SINGLE_STOCK}`);
+          .add(
+            "firstTimeLabel",
+            `+=${WHOLE_ANIMATION_SPEED_FOR_SINGLE_STOCK - SINGLE_DELAY_TIME}`
+          );
 
-        const firstLine = gsap.timeline().fromTo(
+        const firstLine = gsap.fromTo(
           refs,
           { x: 0, y: 0 },
           {
@@ -232,11 +141,11 @@ const AnimeCSpeedTrain: React.FC<stockListType> = ({ symbols }) => {
             y: 0,
             duration: LINE_SPEED,
             ease: Linear.easeNone,
-            stagger: (index, target, list) => SINGLE_DELAY_TIME * index,
+            stagger: (index) => SINGLE_DELAY_TIME * index,
           }
         ); //左
-        // const firstLineDuration = firstLine.totalDuration();
-        const secondLine = gsap.timeline().fromTo(
+
+        const secondLine = gsap.fromTo(
           refs,
           { x: 0, y: 178 },
           {
@@ -244,12 +153,10 @@ const AnimeCSpeedTrain: React.FC<stockListType> = ({ symbols }) => {
             y: 178,
             duration: LINE_SPEED,
             ease: Linear.easeNone,
-            stagger: (index, target, list) => SINGLE_DELAY_TIME * index,
+            stagger: (index) => SINGLE_DELAY_TIME * index,
           }
         ); //左
-        // const secondLineDuration = secondLine.totalDuration();
-
-        const thirdLine = gsap.timeline().fromTo(
+        const thirdLine = gsap.fromTo(
           refs,
           { x: 0, y: 356 },
           {
@@ -257,53 +164,138 @@ const AnimeCSpeedTrain: React.FC<stockListType> = ({ symbols }) => {
             y: 356,
             duration: LINE_SPEED,
             ease: Linear.easeNone,
-            stagger: (index, target, list) => SINGLE_DELAY_TIME * index,
+            stagger: (index) => SINGLE_DELAY_TIME * index,
           }
         ); //左
-        // const thirdLineDuration = secondLine.totalDuration();
-        const lastLine = gsap
-          .timeline()
-          .fromTo(
-            refs,
-            { x: -2560, y: 534 },
-            {
-              x: -4515,
-              y: 534,
-              duration: LAST_LINE_SPEED,
-              ease: Linear.easeNone,
-              stagger: (index, target, list) => SINGLE_DELAY_TIME * index,
-            }
-          )
-          .add("lastLineLabel", `-=${WHOLE_ANIMATION_SPEED_FOR_SINGLE_STOCK}`);
 
-        // const lastLineDuration = secondLine.totalDuration();
-        // console.log("firstLine Duration", firstLineDuration);
-        // console.log("lastLine Duration", lastLineDuration);
-        // console.log("secondLine Duration", secondLineDuration);
-        // console.log("thirdLine Duration", thirdLineDuration);
+        const lastLine = gsap.fromTo(
+          refs,
+          { x: -2560, y: 534 },
+          {
+            x: -4515,
+            y: 534,
+            duration: LAST_LINE_SPEED,
+            ease: Linear.easeNone,
+            stagger: (index) => SINGLE_DELAY_TIME * index,
+          }
+        );
+        // 鄰接最後的補充
+        const initialRefs = refs.filter((_, index) => index < 31);
+        const adjustFirstLine = gsap.fromTo(
+          initialRefs,
+          { x: 0, y: 0 },
+          {
+            x: -4515,
+            y: 0,
+            duration: LINE_SPEED,
+            ease: Linear.easeNone,
+            stagger: (index) => SINGLE_DELAY_TIME * index,
+          }
+        );
+        const adjustSecondLine = gsap.fromTo(
+          initialRefs,
+          { x: 0, y: 178 },
+          {
+            x: -4515,
+            y: 178,
+            duration: LINE_SPEED,
+            ease: Linear.easeNone,
+            stagger: (index) => SINGLE_DELAY_TIME * index,
+          }
+        );
+        const adjustThirdLine = gsap.fromTo(
+          initialRefs,
+          { x: 0, y: 356 },
+          {
+            x: -4515,
+            y: 356,
+            duration: LINE_SPEED,
+            ease: Linear.easeNone,
+            stagger: (index) => SINGLE_DELAY_TIME * index,
+          }
+        );
+        const adjustLastLine = gsap.fromTo(
+          initialRefs,
+          { x: -2560, y: 534 },
+          {
+            x: -4515,
+            y: 534,
+            duration: LAST_LINE_SPEED,
+            ease: Linear.easeNone,
+            stagger: (index) => SINGLE_DELAY_TIME * index,
+          }
+        );
 
         timeline.add(firstLine);
         timeline.add(secondLine, LINE_SPEED.toString());
         timeline.add(thirdLine, (LINE_SPEED * 2).toString());
-        timeline.add(lastLine, (LINE_SPEED * 3).toString());
-        // const timelineDuration = timeline.totalDuration();
-        // console.log("timeline Duration", timelineDuration);
-        // timeline.add("first_achieve", WHOLE_ANIMATION_SPEED_FOR_SINGLE_STOCK);
-        // timeline.seek("first_achieve");
+        timeline
+          .add(lastLine, (LINE_SPEED * 3).toString())
+          .add("lastLineAnime"); //label for fake loop
+
+        //fake loop
+        const WHOLE_TIME_FOR_SINGLE_STOCK = LINE_SPEED * 3 + LAST_LINE_SPEED;
+        timeline.add(
+          adjustFirstLine,
+          `lastLineAnime-=${WHOLE_TIME_FOR_SINGLE_STOCK - SINGLE_DELAY_TIME}`
+        );
+        timeline.add(
+          adjustSecondLine,
+          `lastLineAnime-=${
+            WHOLE_TIME_FOR_SINGLE_STOCK - SINGLE_DELAY_TIME - LINE_SPEED
+          }`
+        );
+        timeline.add(
+          adjustThirdLine,
+          `lastLineAnime-=${
+            WHOLE_TIME_FOR_SINGLE_STOCK - SINGLE_DELAY_TIME - LINE_SPEED * 2
+          }`
+        );
+        timeline
+          .add(
+            adjustLastLine,
+            `lastLineAnime-=${
+              WHOLE_TIME_FOR_SINGLE_STOCK - SINGLE_DELAY_TIME - LINE_SPEED * 3
+            }`
+          )
+          .add("shortCutPoint", `<+=${LAST_LINE_SPEED - SINGLE_DELAY_TIME}`);
+
+        timeline.add(() => {
+          console.log("執行剪接剪接");
+          timeline.seek("firstTimeLabel");
+        }, "shortCutPoint");
       }
     }, 1000);
   };
-
+  let lastScreenSymbols = React.useRef<string[]>([]);
   //getQuotes && register
   React.useEffect(() => {
-    console.log("執行取Quote註冊");
     if (!masterSessionId) return;
     (async () => {
+      //關於取Quote：不重複取Quote原則，第一次動畫時進行sliding 會有很多symbol被重複取Quote，此處邏輯避免此狀況
+      if (repeatRef.current) return; //如果動畫重複第二圈以後，不取Quote
+
+      const lastSymbols = lastScreenSymbols.current;
+      let getSymbols;
+
+      if (lastSymbols.length === 0) {
+        //上次暫存的symbols長度如為零代表第一圈，取滿30個quote
+        getSymbols = [...onScreenSymbols];
+      } else {
+        //之後就取上次最後一位到新的最後一位symbols即可。
+        const stIdx = onScreenSymbols.lastIndexOf(
+          lastSymbols[lastSymbols.length - 1]
+        );
+        getSymbols = onScreenSymbols.slice(stIdx);
+      }
+
       const quotesInfo = await getMultiQuotes({
-        symbols: onScreenSymbols,
+        symbols: getSymbols,
         sessionId: masterSessionId,
       });
-      setQuotes(quotesInfo);
+
+      setQuotes((prev) => Object.assign({}, prev, quotesInfo));
+      lastScreenSymbols.current = [...onScreenSymbols];
     })();
 
     //過濾出要註冊的symbols
@@ -320,7 +312,6 @@ const AnimeCSpeedTrain: React.FC<stockListType> = ({ symbols }) => {
     window.addEventListener(
       "blur",
       function () {
-        console.log("blur called");
         gsap.ticker.lagSmoothing(0);
       },
       false
