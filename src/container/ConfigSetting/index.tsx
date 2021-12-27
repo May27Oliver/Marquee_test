@@ -6,13 +6,22 @@ import api from "api";
 const cx = classNames.bind(styles);
 
 const ConfigSetting: React.FC = () => {
-  const [speed, setSpeed] = React.useState<number>(40);
+  const [speed, setSpeed] = React.useState<number | null>(null);
   const dispatch = useMarqueeDispatchContext();
   const setSpeedDispatch = (value: number) => {
     dispatch({ type: "SET_SPEED", payload: value });
   };
 
   React.useEffect(() => {
+    (async () => {
+      const response = await api.querySpeed();
+      if (!response.result || !response.data) return;
+      setSpeed(response.data);
+    })();
+  }, []);
+
+  React.useEffect(() => {
+    if (!speed) return;
     (async () => {
       await api.updateSpeed(speed);
     })();
@@ -23,20 +32,22 @@ const ConfigSetting: React.FC = () => {
       <div className={cx("setting-type-content")}>
         <div className={cx("setting-content-line")}>
           <div className={cx("setting-line-title")}>跑馬燈速度</div>
-          <select
-            className={cx("select-option")}
-            name="speed"
-            id="marquee-speed"
-            onChange={(e) => {
-              setSpeed(parseInt(e.target.value));
-            }}
-          >
-            <option value={50}>50</option>
-            <option value={45}>45</option>
-            <option value={40} selected>
-              40
-            </option>
-          </select>
+          {speed && (
+            <select
+              className={cx("select-option")}
+              id="marquee-speed"
+              value={speed}
+              onChange={(e) => {
+                setSpeed(parseInt(e.target.value));
+              }}
+            >
+              <option value={40} selected>
+                40
+              </option>
+              <option value={45}>45</option>
+              <option value={50}>50</option>
+            </select>
+          )}
         </div>
       </div>
     </>

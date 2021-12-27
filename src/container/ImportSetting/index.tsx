@@ -1,16 +1,14 @@
 import React from "react";
 import classNames from "classnames/bind";
 import styles from "container/Setting/index.module.css";
-import { requestSymbol } from "api/MarqueeConf";
+import { SymbolType } from "api/MarqueeConf";
 import api from "api";
 import useQueryGroupList from "container/ManageSetting/useQueryGroupList";
 
 const cx = classNames.bind(styles);
 
 const ImportSetting: React.FC = () => {
-  const [importList, setImportList] = React.useState<requestSymbol[] | null>(
-    null
-  );
+  const [importList, setImportList] = React.useState<SymbolType[] | null>(null);
   const [groupno, setGroupNo] = React.useState<number>(1);
   const inputRef = React.useRef<HTMLInputElement | null>(null);
 
@@ -22,6 +20,7 @@ const ImportSetting: React.FC = () => {
       .map((item, index) => {
         const [stockName, stockNo, symbol] = item.split(",");
         return {
+          groupId: groupno,
           stockName,
           stockNo,
           symbol,
@@ -34,7 +33,7 @@ const ImportSetting: React.FC = () => {
   };
 
   React.useEffect(() => {
-    if (importList === null) return;
+    if (importList === null || importList.length === 0) return;
     const response = api.importSymbols(groupno, importList);
     //跳窗顯示匯入成功
   }, [importList]);
@@ -89,7 +88,7 @@ const ImportSetting: React.FC = () => {
         </div>
         <div className={cx("import-stock-list")}>
           <div className={cx("stock-list")}>
-            {importList?.map((stock, index) => {
+            {importList?.map((stock) => {
               return (
                 <div className={cx("stock-items")}>
                   <div className={cx("group-title-and-delete", "flex-row")}>

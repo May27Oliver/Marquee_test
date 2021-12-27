@@ -14,22 +14,24 @@ const LASTTIMESTAMP = new Date().setHours(13, 30, 0, 0);
 const PRICELENGTH = 50;
 const TIMEGP = (LASTTIMESTAMP - FIRSTTIMESTAMP) / PRICELENGTH;
 const SINGLE_STOCK_WITH = 674;
-const LINE_SPEED = 45;
-const SINGLE_MOVE_OUT_SPEED = (674 * LINE_SPEED) / 4515;
-const LAST_LINE_SPEED = (1955 * LINE_SPEED) / 4515;
-const SCREEN_WITH = 3840 + SINGLE_STOCK_WITH;
-const SINGLE_DELAY_TIME = (674 * LINE_SPEED) / SCREEN_WITH;
 
-const registInterval = SINGLE_MOVE_OUT_SPEED * 2 * 1000;
-const startInterval =
-  (LINE_SPEED * 3 + LAST_LINE_SPEED + SINGLE_DELAY_TIME) * 1000;
-let counter: NodeJS.Timeout;
-let delayCounter: NodeJS.Timeout;
 interface stockListType {
   symbols: string[];
+  speed: number;
 }
 
-const AnimeCSpeedTrain: React.FC<stockListType> = ({ symbols }) => {
+const AnimeCSpeedTrain: React.FC<stockListType> = ({ symbols, speed }) => {
+  const LINE_SPEED = speed;
+  const SINGLE_MOVE_OUT_SPEED = (674 * LINE_SPEED) / 4515;
+  const LAST_LINE_SPEED = (1955 * LINE_SPEED) / 4515;
+  const SCREEN_WITH = 3840 + SINGLE_STOCK_WITH;
+  const SINGLE_DELAY_TIME = (674 * LINE_SPEED) / SCREEN_WITH;
+
+  const registInterval = SINGLE_MOVE_OUT_SPEED * 2 * 1000;
+  const startInterval =
+    (LINE_SPEED * 3 + LAST_LINE_SPEED + SINGLE_DELAY_TIME) * 1000;
+  let counter: NodeJS.Timeout;
+  let delayCounter: NodeJS.Timeout;
   const { masterSessionId, slaveSessionId } = useApexStateContext();
   //計算sliding window的pointer
   const roundRef = React.useRef<number>(0);
@@ -328,6 +330,7 @@ const AnimeCSpeedTrain: React.FC<stockListType> = ({ symbols }) => {
           <StockTrain
             regMap={RegRef.current}
             quotes={quotes}
+            speed={speed}
             symbols={symbols}
             stockRefs={stockRefs.current}
           />

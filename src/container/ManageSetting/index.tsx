@@ -4,28 +4,28 @@ import styles from "container/Setting/index.module.css";
 import api from "api";
 import * as Icons from "icons";
 import useQueryGroupList from "./useQueryGroupList";
-import { symbolListType } from "api/MarqueeConf";
+import { SymbolType } from "api/MarqueeConf";
 
 const cx = classNames.bind(styles);
 
 const ManageSetting: React.FC = () => {
   const [searchWords, setSearchWords] = React.useState<string>(""); //快速查詢
-  const [groupno, setGroupNo] = React.useState<number>(1);
+  const [groupno, setGroupNo] = React.useState<number | null>(null);
   const {
     value: symbolList,
     loading,
     error,
     retry,
   } = useQueryGroupList(groupno);
-  const [stockList, setStockList] = React.useState<symbolListType[]>([]);
+  const [stockList, setStockList] = React.useState<SymbolType[]>([]);
   //add Symbol
   const [stockNo, setStockNo] = React.useState<string>("");
   const [stockName, setStockName] = React.useState<string>("");
-  const filterAfterSearchWords = (stockList: symbolListType[]) => {
+  const filterAfterSearchWords = (stockList: SymbolType[]) => {
     if (!searchWords) return stockList;
 
     return stockList.filter((item) => {
-      if (item.Symbol.indexOf(searchWords) !== -1) {
+      if (item.symbol.indexOf(searchWords) !== -1) {
         return true;
       } else {
         return false;
@@ -33,11 +33,21 @@ const ManageSetting: React.FC = () => {
     });
   };
   React.useEffect(() => {
+    (async () => {
+      const response = await api.getGroupNames();
+      if (!response.result || !response.data) return;
+      setGroupNo(response.data.group_id);
+    })();
+  }, []);
+
+  React.useEffect(() => {
     if (!symbolList) return;
+    // setGroupNo(symbolList)
     setStockList(symbolList);
   }, [symbolList]);
 
   React.useEffect(() => {
+    if (!groupno) return;
     (async () => {
       await api.updateGroupNo(groupno);
     })();
@@ -50,20 +60,20 @@ const ManageSetting: React.FC = () => {
           <div className={cx("group-manage-column")}>
             <div className={cx("group-items", "bottom-line-none")}>
               <div className={cx("group-item-title", "item-line-height")}>
-                <select
-                  className={cx("group-manage-setting")}
-                  value={groupno}
-                  onChange={(e) => {
-                    setGroupNo(parseInt(e.target.value));
-                  }}
-                >
-                  <option value={1} selected>
-                    科技股
-                  </option>
-                  <option value={2}>電子股</option>
-                  <option value={3}>傳產股</option>
-                  <option value={4}>自選股</option>
-                </select>
+                {groupno && (
+                  <select
+                    className={cx("group-manage-setting")}
+                    value={groupno}
+                    onChange={(e) => {
+                      setGroupNo(parseInt(e.target.value));
+                    }}
+                  >
+                    <option value={1}>科技股</option>
+                    <option value={2}>電子股</option>
+                    <option value={3}>傳產股</option>
+                    <option value={4}>自選股</option>
+                  </select>
+                )}
               </div>
               <div className={cx("play-wrap")}>
                 <div className={cx("play-icom")}></div>
@@ -88,7 +98,7 @@ const ManageSetting: React.FC = () => {
           <div className={cx("column-wrap")}>
             <div className={cx("column-list")}>
               {filterAfterSearchWords(stockList).map((stock, stidx) => (
-                <div className={cx("stock-items")}>
+                <div className={cx("stock-items")} key={stock.marqueeOrder}>
                   <div className={cx("group-title-and-delete", "flex-row")}>
                     <div
                       className={cx("group-item-delete", "item-line-height")}
@@ -96,18 +106,25 @@ const ManageSetting: React.FC = () => {
                       <button
                         className={cx("delete-group")}
                         onClick={() => {
-                          // api.deleteSymbol(groupno,stock);
+                          if (!groupno) return;
+                          api.deleteSymbol(groupno, stock);
+                          setStockList((prev) =>
+                            prev.filter((stock, i) => {
+                              return stidx !== i;
+                            })
+                          );
+                          // retry();
                         }}
                       >
                         刪除
                       </button>
                     </div>
                     <div className={cx("group-item-title", "item-line-height")}>
-                      {stock.StockName}
+                      {stock.stockName}
                     </div>
                   </div>
                   <div className={cx("item-line-height", "flex-column")}>
-                    {stock.Symbol.slice(0, 4)}
+                    {stock.stockNo}
                   </div>
                 </div>
               ))}
@@ -132,7 +149,9 @@ const ManageSetting: React.FC = () => {
               <button
                 className={cx("send-stock-name-to-list")}
                 onClick={async () => {
+                  if (!groupno) return;
                   await api.addSymbols(groupno, {
+                    groupId: groupno,
                     symbol: stockNo + ".TW",
                     stockName: stockName,
                     stockNo: stockNo,

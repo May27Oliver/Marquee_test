@@ -88,15 +88,12 @@ class Api {
   };
 
   //個別群組增加股票
-  addSymbols = async (groupno: number, symbol: marquee.requestSymbol) => {
+  addSymbols = async (groupno: number, symbol: marquee.SymbolType) => {
     return marquee.addSymbols(groupno, symbol);
   };
 
   //匯入csv
-  importSymbols = async (
-    groupno: number,
-    importList: marquee.requestSymbol[]
-  ) => {
+  importSymbols = async (groupno: number, importList: marquee.SymbolType[]) => {
     return marquee.importSymbols(groupno, importList);
   };
 
@@ -104,14 +101,23 @@ class Api {
   updateGroupNo = async (groupno: number) => {
     return marquee.updateGroupNo(groupno);
   };
+
+  //取得速度
+  querySpeed = async () => {
+    return marquee.querySpeed();
+  };
   //調整速度
   updateSpeed = async (groupno: number) => {
     return marquee.updateSpeed(groupno);
   };
 
   //刪除symbol
-  deleteSymbol = async (groupno: number, symbol: marquee.requestSymbol) => {
+  deleteSymbol = async (groupno: number, symbol: marquee.SymbolType) => {
     return marquee.deleteSymbol(groupno, symbol);
+  };
+
+  getMarqueeSymbols = async () => {
+    return marquee.getMarqueeSymbols();
   };
 }
 
