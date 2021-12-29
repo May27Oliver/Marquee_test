@@ -32,7 +32,7 @@ const AnimeCSpeedTrain: React.FC<stockListType> = ({ symbols, speed }) => {
     (LINE_SPEED * 3 + LAST_LINE_SPEED + SINGLE_DELAY_TIME) * 1000;
   let counter: NodeJS.Timeout;
   let delayCounter: NodeJS.Timeout;
-  const { masterSessionId, slaveSessionId } = useApexStateContext();
+  const { slaveSessionId } = useApexStateContext();
   //計算sliding window的pointer
   const roundRef = React.useRef<number>(0);
   const repeatRef = React.useRef<boolean>(false);
@@ -272,7 +272,7 @@ const AnimeCSpeedTrain: React.FC<stockListType> = ({ symbols, speed }) => {
   let lastScreenSymbols = React.useRef<string[]>([]);
   //getQuotes && register
   React.useEffect(() => {
-    if (!masterSessionId) return;
+    if (!slaveSessionId) return;
     (async () => {
       //關於取Quote：不重複取Quote原則，第一次動畫時進行sliding 會有很多symbol被重複取Quote，此處邏輯避免此狀況
       if (repeatRef.current) return; //如果動畫重複第二圈以後，不取Quote
@@ -293,7 +293,7 @@ const AnimeCSpeedTrain: React.FC<stockListType> = ({ symbols, speed }) => {
 
       const quotesInfo = await getMultiQuotes({
         symbols: getSymbols,
-        sessionId: masterSessionId,
+        sessionId: slaveSessionId,
       });
 
       setQuotes((prev) => Object.assign({}, prev, quotesInfo));
@@ -304,10 +304,9 @@ const AnimeCSpeedTrain: React.FC<stockListType> = ({ symbols, speed }) => {
     api.registerTick({
       symbols: onScreenSymbols,
       types: ["KLine", "Tick"],
-      masterSessionId,
       slaveSessionId,
     });
-  }, [masterSessionId, onScreenSymbols]);
+  }, [slaveSessionId, onScreenSymbols]);
 
   React.useEffect(() => {
     // 避免轉換WebTab造成gsap動畫出現延遲或中斷，監聽blur事件。

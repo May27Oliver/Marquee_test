@@ -20,7 +20,6 @@ import {
 } from "websocket/quote";
 import { getEnv } from "tools/getEnv";
 import api from "api";
-import classNames from "classnames/bind";
 
 function useListenApexSessionIdSubject() {
   const dispatch = useApexDispatchContext();
@@ -50,30 +49,30 @@ function useListenApexSessionIdSubject() {
     };
   }, [dispatch]);
 }
-function useConnectMasterQuoteSocket() {
-  const [{ masterSocket: quoteSocket }, apexInfoDispatch] = useApexContext();
-  React.useEffect(() => {
-    if (quoteSocket !== null) {
-      return;
-    }
-    const socket = connectQuoteWebSocket({
-      url: `${getEnv("QUOTE_MASTER_URL")}${getEnv(
-        "QUOTE_MASTER_SOCKET_END_POINT"
-      )}`,
-      onClose: () => {
-        apexInfoDispatch({ type: "CLOSE_MASTER_SOCKET" });
-      },
-    });
-    apexInfoDispatch({ type: "SET_MASTER_SOCKET", payload: socket });
+// function useConnectMasterQuoteSocket() {
+//   const [{ masterSocket: quoteSocket }, apexInfoDispatch] = useApexContext();
+//   React.useEffect(() => {
+//     if (quoteSocket !== null) {
+//       return;
+//     }
+//     const socket = connectQuoteWebSocket({
+//       url: `${getEnv("QUOTE_MASTER_URL")}${getEnv(
+//         "QUOTE_MASTER_SOCKET_END_POINT"
+//       )}`,
+//       onClose: () => {
+//         apexInfoDispatch({ type: "CLOSE_MASTER_SOCKET" });
+//       },
+//     });
+//     apexInfoDispatch({ type: "SET_MASTER_SOCKET", payload: socket });
 
-    return () => {
-      if (socket?.readyState === SockJs.OPEN) {
-        socket.send("disconnect");
-        apexInfoDispatch({ type: "CLOSE_MASTER_SOCKET" });
-      }
-    };
-  }, [quoteSocket, apexInfoDispatch]);
-}
+//     return () => {
+//       if (socket?.readyState === SockJs.OPEN) {
+//         socket.send("disconnect");
+//         apexInfoDispatch({ type: "CLOSE_MASTER_SOCKET" });
+//       }
+//     };
+//   }, [quoteSocket, apexInfoDispatch]);
+// }
 
 function useConnectSlaveQuoteSocket() {
   const [{ masterSocket: quoteSocket }, apexInfoDispatch] = useApexContext();
@@ -103,7 +102,7 @@ function useConnectSlaveQuoteSocket() {
 
 const App: React.FC = () => {
   useListenApexSessionIdSubject();
-  useConnectMasterQuoteSocket();
+  // useConnectMasterQuoteSocket();
   useConnectSlaveQuoteSocket();
   return (
     <div className="App">

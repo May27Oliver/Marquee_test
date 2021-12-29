@@ -5,12 +5,16 @@ import * as quote from "./Quote";
 import * as marquee from "./MarqueeConf";
 
 class Api {
-  constructor(
-    private clientOrderIdPrefix: string = "",
-    private tokenInvalidAction: () => void = () => {}
-  ) {
+  constructor(private tokenInvalidAction: () => void = () => {}) {
     this.axios = axios.create({
       baseURL: getEnv("QUOTE_SLAVE_URL"),
+      validateStatus: (status) => status === 200,
+    });
+    //MARQUEE_KGI_URL
+    //LOCAL_TEST
+    this.axiosMarquee = axios.create({
+      baseURL: getEnv("MARQUEE_KGI_URL"),
+      headers: { "Content-Type": "application/json" },
       validateStatus: (status) => status === 200,
     });
 
@@ -18,6 +22,7 @@ class Api {
   }
 
   private axios: AxiosInstance;
+  private axiosMarquee: AxiosInstance;
 
   private setAxiosInterceptors = () => {
     this.setAxiosInterceptorsForRequest();
@@ -79,45 +84,45 @@ class Api {
 
   //取得該播放哪個群組資料
   getGroupNames = async () => {
-    return marquee.queryGroupName();
+    return marquee.queryGroupName(this.axiosMarquee);
   };
 
   //取得群組所有股票
   getSymbols = async (groupId: number) => {
-    return marquee.querySymbols(groupId);
+    return marquee.querySymbols(this.axiosMarquee, groupId);
   };
 
   //個別群組增加股票
   addSymbols = async (groupno: number, symbol: marquee.SymbolType) => {
-    return marquee.addSymbols(groupno, symbol);
+    return marquee.addSymbols(this.axiosMarquee, groupno, symbol);
   };
 
   //匯入csv
   importSymbols = async (groupno: number, importList: marquee.SymbolType[]) => {
-    return marquee.importSymbols(groupno, importList);
+    return marquee.importSymbols(this.axiosMarquee, groupno, importList);
   };
 
   //調整播放群組
   updateGroupNo = async (groupno: number) => {
-    return marquee.updateGroupNo(groupno);
+    return marquee.updateGroupNo(this.axiosMarquee, groupno);
   };
 
   //取得速度
   querySpeed = async () => {
-    return marquee.querySpeed();
+    return marquee.querySpeed(this.axiosMarquee);
   };
   //調整速度
   updateSpeed = async (groupno: number) => {
-    return marquee.updateSpeed(groupno);
+    return marquee.updateSpeed(this.axiosMarquee, groupno);
   };
 
   //刪除symbol
   deleteSymbol = async (groupno: number, symbol: marquee.SymbolType) => {
-    return marquee.deleteSymbol(groupno, symbol);
+    return marquee.deleteSymbol(this.axiosMarquee, groupno, symbol);
   };
 
   getMarqueeSymbols = async () => {
-    return marquee.getMarqueeSymbols();
+    return marquee.getMarqueeSymbols(this.axiosMarquee);
   };
 }
 

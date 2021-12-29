@@ -104,7 +104,7 @@
     "predeploy": "npm run build",
     "start": "react-app-rewired start",
     "deploy": "gh-pages -d build",
-    "build": "react-app-rewired build",
+    "build": "react-scripts build",
     "test": "react-app-rewired test",
     "eject": "react-app-rewired eject"
   },

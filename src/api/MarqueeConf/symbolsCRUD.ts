@@ -1,4 +1,4 @@
-import axios, { AxiosInstance } from "axios";
+import { AxiosInstance } from "axios";
 
 export type QueryResponse<T> =
   | {
@@ -45,11 +45,8 @@ export interface SymbolType {
   marqueeOrder: number;
 }
 
-export const queryGroupName = async () => {
-  const { data } = await axios.get<ResponseGroupName>(
-    `http://localhost:8888/getGroupName`
-  );
-  console.log("測試api queryGroupName data", data);
+export const queryGroupName = async (axios: AxiosInstance) => {
+  const { data } = await axios.get<ResponseGroupName>(`/getGroupName`);
   if (!data.result) {
     return { result: false, reason: "查無資料" };
   }
@@ -66,10 +63,11 @@ export const queryGroupName = async () => {
 
 /*查詢symbols*/
 export const querySymbols = async (
+  axios: AxiosInstance,
   groupId: number
 ): Promise<QueryResponse<SymbolType[]>> => {
   const { data } = await axios.get<QuerySymbols>(
-    `http://localhost:8888/getSymbols/groupId=${groupId ? groupId : 1}`
+    `/getSymbols/groupId=${groupId ? groupId : 1}`
   );
   const symbolList = data.symbols.map((item) => ({
     groupId: item.GroupId,
@@ -86,19 +84,21 @@ export const querySymbols = async (
 };
 
 //增加symbols
-export const addSymbols = async (groupno: number, symbol: SymbolType) => {
+export const addSymbols = async (
+  axios: AxiosInstance,
+  groupno: number,
+  symbol: SymbolType
+) => {
   const requestData = JSON.stringify({
     groupId: groupno,
     symbol,
   });
-  const { data } = await axios.post<MessageType>(
-    "http://localhost:8888/addSymbol",
-    requestData
-  );
+  const { data } = await axios.post<MessageType>(`/addSymbol`, requestData);
 };
 
 //匯入symbols
 export const importSymbols = async (
+  axios: AxiosInstance,
   groupno: number,
   importList: SymbolType[]
 ) => {
@@ -107,40 +107,41 @@ export const importSymbols = async (
     symbols: importList,
   });
   const { data } = await axios.post<MessageType>(
-    "http://localhost:8888/importSymbols",
+    `/importSymbols`,
     request_data
   );
   return data;
 };
 
 //修改播放群組
-export const updateGroupNo = async (groupno: number) => {
+export const updateGroupNo = async (axios: AxiosInstance, groupno: number) => {
   const request_data = JSON.stringify({
-    groupId: groupno,
+    groupId: 1,
   });
   const { data } = await axios.post<MessageType>(
-    "http://localhost:8888/updateGroupNo",
+    `/updateGroupNo`,
     request_data
   );
   return data;
 };
 
-export const deleteSymbol = async (groupno: number, symbol: SymbolType) => {
+export const deleteSymbol = async (
+  axios: AxiosInstance,
+  groupno: number,
+  symbol: SymbolType
+) => {
   const requestData = JSON.stringify({
     groupId: groupno,
     symbol,
   });
-  const { data } = await axios.post<MessageType>(
-    "http://localhost:8888/deleteSymbol",
-    requestData
-  );
+  const { data } = await axios.post<MessageType>(`/deleteSymbol`, requestData);
   return data;
 };
 
-export const getMarqueeSymbols = async (): Promise<QueryResponse<string[]>> => {
-  const { data } = await axios.get<QueryMarqueeSymbols>(
-    "http://localhost:8888/getMarqueeSymbols"
-  );
+export const getMarqueeSymbols = async (
+  axios: AxiosInstance
+): Promise<QueryResponse<string[]>> => {
+  const { data } = await axios.get<QueryMarqueeSymbols>(`/getMarqueeSymbols`);
   if (!data.result) {
     return { result: false, reason: "查無資料" };
   }

@@ -30,6 +30,7 @@ export interface Parameter {
 }
 
 export function connectWebSocket({ url, onClose }: Parameter) {
+  console.log("connect to socket", url);
   const sock = new SockJS(url, null, {
     sessionId: () => window.btoa(`${uuid()}$apex@tw`),
   });

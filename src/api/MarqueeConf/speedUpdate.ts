@@ -1,5 +1,4 @@
-import axios, { AxiosInstance } from "axios";
-
+import { AxiosInstance } from "axios";
 interface speedType {
   result: boolean;
   speed: {
@@ -12,9 +11,10 @@ interface MessageType {
   result: boolean;
   message: string;
 }
+
 //取得速度資料
-export const querySpeed = async () => {
-  const { data } = await axios.get<speedType>(`http://localhost:8888/getSpeed`);
+export const querySpeed = async (axios: AxiosInstance) => {
+  const { data } = await axios.get<speedType>(`/getSpeed`);
   if (!data.result) {
     return { result: false, reason: "查無資料" };
   }
@@ -22,13 +22,10 @@ export const querySpeed = async () => {
 };
 
 //修改速度
-export const updateSpeed = async (speed: number) => {
+export const updateSpeed = async (axios: AxiosInstance, speed: number) => {
   const request_data = JSON.stringify({
     speed,
   });
-  const { data } = await axios.post<MessageType>(
-    "http://localhost:8888/updateSpeed",
-    request_data
-  );
+  const { data } = await axios.post<MessageType>(`/updateSpeed`, request_data);
   return data;
 };

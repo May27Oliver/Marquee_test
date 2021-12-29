@@ -219,7 +219,7 @@ const VisiableStock: React.FC<StockInfoType> = ({
     upDown: UpDown || 0,
     upDownRate: UpDownRate || 0,
   });
-  const { masterSessionId } = useApexStateContext();
+  const { slaveSessionId } = useApexStateContext();
   const [stockName] = NameSlave ? NameSlave.split(".") : [""];
   const priceDecimal = quote.PriceDec || 0;
   const [priceData, setPriceData] = React.useState<number[]>([PrePrice || 0]); //裝收盤價的array
@@ -238,7 +238,7 @@ const VisiableStock: React.FC<StockInfoType> = ({
   useEffect(() => {
     (async function () {
       const ticks = await api.getKLines({
-        sessionId: masterSessionId,
+        sessionId: slaveSessionId,
         symbol: quote.Symbol,
         priceDecimal,
       });
@@ -249,7 +249,7 @@ const VisiableStock: React.FC<StockInfoType> = ({
         .map((tick) => tick.price);
       setPriceData((prev) => [...ticksData]);
     })();
-  }, [masterSessionId, priceDecimal, quote]);
+  }, [slaveSessionId, priceDecimal, quote]);
 
   useEffect(() => {
     //收KLine

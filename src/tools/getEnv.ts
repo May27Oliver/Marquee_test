@@ -8,7 +8,9 @@ export type EnvKey =
   | "QUOTE_SLAVE_SOCKET_END_POINT"
   | "VERSION"
   | "TRADE_API_URL"
-  | "TRADE_SOCKET_END_POINT";
+  | "TRADE_SOCKET_END_POINT"
+  | "MARQUEE_KGI_URL"
+  | "LOCAL_TEST";
 
 export interface EnvObject {
   appName: string;

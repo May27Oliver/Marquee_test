@@ -41,9 +41,7 @@ const ConfigSetting: React.FC = () => {
                 setSpeed(parseInt(e.target.value));
               }}
             >
-              <option value={40} selected>
-                40
-              </option>
+              <option value={40}>40</option>
               <option value={45}>45</option>
               <option value={50}>50</option>
             </select>
