@@ -18,7 +18,7 @@ body,
 #root {
   overflow: auto;
 }
-@font-face {
+/* @font-face {
   font-family: "Noto Sans TC";
   font-style: normal;
   font-weight: 500;
@@ -28,4 +28,4 @@ body,
       format("woff"),
     url(//fonts.gstatic.com/ea/notosanstc/v1/NotoSansTC-Medium.otf)
       format("opentype");
-}
+} */

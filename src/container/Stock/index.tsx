@@ -21,6 +21,7 @@ const Stock = React.forwardRef<HTMLLIElement, StockInfoType>(
       <li className={cx("stock-item")} ref={ref}>
         {quote ? (
           <VisiableStock
+            AppRef={AppRef}
             symbol={symbol}
             quote={quote}
             key={quote.NameSlave}

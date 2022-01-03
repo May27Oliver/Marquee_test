@@ -6,6 +6,7 @@ import Stock from "container/Stock";
 import getMultiQuotes, { QuoteMap } from "./getMultiQuotes";
 import api from "api";
 import { gsap, Linear } from "gsap";
+import { time } from "console";
 
 const cx = classNames.bind(styles);
 
@@ -27,14 +28,10 @@ const AnimeCSpeedTrain: React.FC<stockListType> = ({ symbols, speed }) => {
   const SCREEN_WITH = 3840 + SINGLE_STOCK_WITH;
   const SINGLE_DELAY_TIME = (674 * LINE_SPEED) / SCREEN_WITH;
 
-  const registInterval = SINGLE_MOVE_OUT_SPEED * 2 * 1000;
-  const startInterval =
-    (LINE_SPEED * 3 + LAST_LINE_SPEED + SINGLE_DELAY_TIME) * 1000;
-  let counter: NodeJS.Timeout;
-  let delayCounter: NodeJS.Timeout;
+  const registInterval = SINGLE_MOVE_OUT_SPEED * 2;
+  const startInterval = LINE_SPEED * 3 + LAST_LINE_SPEED + SINGLE_DELAY_TIME;
   const { slaveSessionId } = useApexStateContext();
   //計算sliding window的pointer
-  const roundRef = React.useRef<number>(0);
   const repeatRef = React.useRef<boolean>(false);
   //欲註冊的map
   const regMap = symbols.reduce<RegType>((acc, each, index) => {
@@ -61,57 +58,6 @@ const AnimeCSpeedTrain: React.FC<stockListType> = ({ symbols, speed }) => {
     })
   );
 
-  const sliding_window_counter = () => {
-    clearInterval(counter);
-    clearTimeout(delayCounter);
-    RegRef.current = regMap;
-    setOnScreenSymbols(originScreenSymbols);
-    roundRef.current = 0;
-    window.requestAnimationFrame(() => {
-      delayCounter = setTimeout(() => {
-        counter = setInterval(() => {
-          //固定時間註冊數往後移
-          const round = roundRef.current;
-          const disFromEnd = symbols.length - round;
-          //如果逼近最後三十個，則不進行slide，pointer繼續往下
-          if (disFromEnd < 30) {
-            //sliding
-            RegRef.current = symbols.reduce<RegType>((acc, each, index) => {
-              if (index < 30 + round && index >= round && index < 30) {
-                acc[each] = { reg: true, index };
-                return acc;
-              }
-              acc[each] = { reg: false, index };
-              return acc;
-            }, {});
-            roundRef.current = roundRef.current + 2;
-            return;
-          } else if (disFromEnd < 2) {
-            //差距小於二就從零再開始
-            repeatRef.current = true;
-            roundRef.current = 0;
-          }
-          //sliding
-          RegRef.current = symbols.reduce<RegType>((acc, each, index) => {
-            if (index < 30 + round && index >= round) {
-              acc[each] = { reg: true, index };
-              return acc;
-            }
-            acc[each] = { reg: false, index };
-            return acc;
-          }, {});
-
-          setOnScreenSymbols(
-            symbols
-              .map((symbol) => (RegRef.current[symbol].reg ? symbol : ""))
-              .filter(Boolean)
-          );
-
-          roundRef.current = roundRef.current + 2;
-        }, registInterval);
-      }, startInterval);
-    });
-  };
   //gsap animation
   const animationMarquee = () => {
     setTimeout(() => {
@@ -124,12 +70,7 @@ const AnimeCSpeedTrain: React.FC<stockListType> = ({ symbols, speed }) => {
         const WHOLE_ANIMATION_SPEED_FOR_SINGLE_STOCK =
           LINE_SPEED * 3 + LAST_LINE_SPEED;
         const timeline = gsap
-          .timeline({
-            onStart: () => {
-              console.log("sliding animate onStart ");
-              sliding_window_counter();
-            },
-          })
+          .timeline()
           .add(
             "firstTimeLabel",
             `+=${WHOLE_ANIMATION_SPEED_FOR_SINGLE_STOCK - SINGLE_DELAY_TIME}`
@@ -227,7 +168,7 @@ const AnimeCSpeedTrain: React.FC<stockListType> = ({ symbols, speed }) => {
             stagger: (index) => SINGLE_DELAY_TIME * index,
           }
         );
-
+        //animation start
         timeline.add(firstLine);
         timeline.add(secondLine, LINE_SPEED.toString());
         timeline.add(thirdLine, (LINE_SPEED * 2).toString());
@@ -262,42 +203,67 @@ const AnimeCSpeedTrain: React.FC<stockListType> = ({ symbols, speed }) => {
           )
           .add("shortCutPoint", `<+=${LAST_LINE_SPEED - SINGLE_DELAY_TIME}`);
 
+        //飛雷神之術，回到起點
         timeline.add(() => {
-          console.log("執行剪接剪接");
           timeline.seek("firstTimeLabel");
         }, "shortCutPoint");
+
+        //sliding counter
+        const registTimes = (symbols.length - 30) / 2;
+        for (let i = 0; i < registTimes + 1; i++) {
+          timeline.add(() => {
+            if (i === registTimes) {
+              //最後ㄧround，要註冊60個symbols
+              if (!repeatRef.current) {
+                repeatRef.current = true;
+              }
+              RegRef.current = symbols.reduce<RegType>((acc, each, index) => {
+                if (index < 30 || index > symbols.length - 30) {
+                  acc[each] = { reg: true, index };
+                  return acc;
+                }
+                acc[each] = { reg: false, index };
+                return acc;
+              }, {});
+            } else {
+              //sliding
+              RegRef.current = symbols.reduce<RegType>((acc, each, index) => {
+                if (index >= i * 2 && index < 30 + i * 2) {
+                  acc[each] = { reg: true, index };
+                  return acc;
+                }
+                acc[each] = { reg: false, index };
+                return acc;
+              }, {});
+            }
+            setOnScreenSymbols(
+              symbols
+                .map((symbol) => (RegRef.current[symbol].reg ? symbol : ""))
+                .filter(Boolean)
+            );
+          }, startInterval + registInterval * i);
+        }
       }
     }, 1000);
   };
-  let lastScreenSymbols = React.useRef<string[]>([]);
+
   //getQuotes && register
   React.useEffect(() => {
     if (!slaveSessionId) return;
     (async () => {
-      //關於取Quote：不重複取Quote原則，第一次動畫時進行sliding 會有很多symbol被重複取Quote，此處邏輯避免此狀況
-      if (repeatRef.current) return; //如果動畫重複第二圈以後，不取Quote
-
-      const lastSymbols = lastScreenSymbols.current;
-      let getSymbols;
-
-      if (lastSymbols.length === 0) {
-        //上次暫存的symbols長度如為零代表第一圈，取滿30個quote
-        getSymbols = [...onScreenSymbols];
-      } else {
-        //之後就取上次最後一位到新的最後一位symbols即可。
-        const stIdx = onScreenSymbols.lastIndexOf(
-          lastSymbols[lastSymbols.length - 1]
-        );
-        getSymbols = onScreenSymbols.slice(stIdx);
-      }
-
       const quotesInfo = await getMultiQuotes({
-        symbols: getSymbols,
+        symbols: onScreenSymbols,
         sessionId: slaveSessionId,
       });
-
-      setQuotes((prev) => Object.assign({}, prev, quotesInfo));
-      lastScreenSymbols.current = [...onScreenSymbols];
+      setQuotes((prev) => {
+        let newQoutes = { ...prev };
+        for (let key in quotesInfo) {
+          if (!newQoutes[key]) {
+            newQoutes[key] = quotesInfo[key];
+          }
+        }
+        return newQoutes;
+      });
     })();
 
     //過濾出要註冊的symbols

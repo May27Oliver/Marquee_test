@@ -51,3 +51,76 @@
 19.查詢 speed 與查詢 groupname 尚未完成
 
 20.完成匯入新增更改群組播放查詢等功能
+
+21.觀察者模式此次沒用到
+intersectionObserver
+useEffect(() => {
+if (!stockRef.current || !quote) return;
+const options = {
+root: AppRef,
+rootMargin: "0px",
+threshold: 1,
+};
+const observer = new globalThis.IntersectionObserver((entry) => {
+const [{ target }] = entry;
+const bounceData = target.getBoundingClientRect();
+const top = bounceData.top;
+const right = bounceData.right;
+
+      if (top > 500 && right < 700) {
+        console.log(stockName, "不可以色色");
+        regMap[quote.Symbol].reg = false;
+        klineSubRef.current?.unsubscribe();
+        tickSubRef.current?.unsubscribe();
+      } else if (top === 0 && right > 2000 && right < 4000) {
+        regMap[quote.Symbol].reg = true;
+        //收KLine
+        klineSubRef.current = KLineSubject.pipe(
+          filter((message) => message.symbol === quote.Symbol),
+          throttleTime(5000)
+        ).subscribe((newKLine) => {
+          if (newKLine.symbol !== quote.Symbol) {
+            return;
+          }
+          //找出是哪個時間點的price需要更換
+          const indexNeedChange = Math.floor(
+            (newKLine.tickTime - firstTimeStamp) / timeGap
+          );
+          // 算出price
+          let price = parseFloat(newKLine.price) / delimiter;
+          setPriceData((prev) => {
+            return prev.map((oldPrice, index) => {
+              if (index === indexNeedChange) {
+                return price;
+              }
+              return oldPrice;
+            });
+          });
+        });
+
+        //收Tick
+        tickSubRef.current = TickSubject.pipe(
+          filter((message) => message.symbol === quote.Symbol),
+          throttleTime(5000) //5秒收一次
+        ).subscribe((message) => {
+          if (message.symbol !== quote.Symbol) {
+            return;
+          }
+          setQuoteInfo({
+            bidPrice: message.price / delimiter,
+            upDown: message.upDown / delimiter,
+            upDownRate: message.upDownRate / 100,
+          });
+        });
+      } else {
+        return;
+
+      return () => {
+        klineSubRef.current?.unsubscribe();
+        tickSubRef.current?.unsubscribe();
+      };
+    }, options)
+    observer.observe(stockRef.current);
+    return () => observer.disconnect();
+
+}, []);
