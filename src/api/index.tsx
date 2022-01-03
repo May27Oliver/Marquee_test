@@ -13,7 +13,7 @@ class Api {
     //MARQUEE_KGI_URL
     //LOCAL_TEST
     this.axiosMarquee = axios.create({
-      baseURL: getEnv("MARQUEE_KGI_URL"),
+      baseURL: getEnv("LOCAL_TEST"),
       headers: { "Content-Type": "application/json" },
       validateStatus: (status) => status === 200,
     });
