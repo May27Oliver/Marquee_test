@@ -42,7 +42,6 @@ const ManageSetting: React.FC = () => {
 
   React.useEffect(() => {
     if (!symbolList) return;
-    // setGroupNo(symbolList)
     setStockList(symbolList);
   }, [symbolList]);
 
@@ -113,7 +112,6 @@ const ManageSetting: React.FC = () => {
                               return stidx !== i;
                             })
                           );
-                          // retry();
                         }}
                       >
                         刪除
@@ -136,6 +134,7 @@ const ManageSetting: React.FC = () => {
                 股票名稱：
                 <input
                   type="text"
+                  value={stockName}
                   onChange={(e) => setStockName(e.target.value)}
                 />
               </div>
@@ -143,6 +142,7 @@ const ManageSetting: React.FC = () => {
                 股票代碼：
                 <input
                   type="text"
+                  value={stockNo}
                   onChange={(e) => setStockNo(e.target.value)}
                 />
               </div>
@@ -158,6 +158,8 @@ const ManageSetting: React.FC = () => {
                     show: true,
                     marqueeOrder: stockList.length + 1,
                   });
+                  setStockName("");
+                  setStockNo("");
                   retry();
                 }}
               >

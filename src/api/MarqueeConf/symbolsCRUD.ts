@@ -116,7 +116,7 @@ export const importSymbols = async (
 //修改播放群組
 export const updateGroupNo = async (axios: AxiosInstance, groupno: number) => {
   const request_data = JSON.stringify({
-    groupId: 1,
+    groupId: groupno,
   });
   const { data } = await axios.post<MessageType>(
     `/updateGroupNo`,

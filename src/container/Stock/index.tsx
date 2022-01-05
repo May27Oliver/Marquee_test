@@ -1,49 +1,27 @@
 import React from "react";
 import classNames from "classnames/bind";
 import styles from "./index.module.css";
-import { Quote } from "model/Quote";
-import { RegType } from "container/AnimeCSpeedTrain";
-import VisiableStock from "container/VisibleStock";
 
 const cx = classNames.bind(styles);
 interface StockInfoType {
-  symbol: string;
-  quote: Quote | undefined;
-  AppRef: Element | null;
-  firstTimeStamp: number;
-  timeGap: number;
-  regMap: RegType;
+  idx: number;
+  children: React.ReactElement<any, any>;
 }
 
 const Stock = React.forwardRef<HTMLLIElement, StockInfoType>(
-  ({ quote, symbol, firstTimeStamp, timeGap, AppRef, regMap }, ref) => {
+  ({ children, idx }, ref) => {
     return (
-      <li className={cx("stock-item")} ref={ref}>
-        {quote ? (
-          <VisiableStock
-            AppRef={AppRef}
-            symbol={symbol}
-            quote={quote}
-            key={quote.NameSlave}
-            firstTimeStamp={firstTimeStamp}
-            timeGap={timeGap}
-          />
-        ) : (
-          <UnvisibleStock symbol={symbol} />
-        )}
+      <li className={cx("stock-item", `${idx}`)} ref={ref}>
+        {children}
       </li>
     );
   }
 );
 interface UnvisibleStockType {
   symbol: string;
-  className?: string;
 }
 
-export const UnvisibleStock: React.FC<UnvisibleStockType> = ({
-  className,
-  symbol,
-}) => {
+export const UnvisibleStock: React.FC<UnvisibleStockType> = ({ symbol }) => {
   return (
     <>
       <div className={cx("stock-item-wrap")}>
