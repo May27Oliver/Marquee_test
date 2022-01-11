@@ -25,8 +25,8 @@ button {
 .setting-page {
   background: white;
   border-radius: 20px;
-  width: 60%;
-  height: 90%;
+  width: 100%;
+  height: 100%;
   padding: 30px 0;
   box-sizing: border-box;
   display: flex;
@@ -160,6 +160,7 @@ button {
   font-size: 18px;
   margin: 10px 0;
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
   position: relative;
 }
@@ -319,6 +320,7 @@ button {
   line-height: 32px;
   height: 32px;
   background: #ff8033;
+  margin-bottom: 10px;
 }
 .add-stock-col {
   margin-top: 10px;
@@ -328,6 +330,7 @@ button {
 }
 .add-input-col {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: flex-start;
 }
@@ -337,6 +340,7 @@ button {
   border: 1px solid #ddd;
   outline: none;
   border-radius: 5px;
+  margin: 10px 0;
 }
 
 .add-stock-name,
@@ -348,4 +352,46 @@ button {
   position: absolute;
   top: 5px;
   right: 10px;
+}
+
+@media (min-width: 650px) {
+  .setting-page {
+    width: 100%;
+    height: 100%;
+  }
+  .list-wrap .column-title {
+    flex-direction: row;
+  }
+  .add-stock-col {
+    margin-top: 10px;
+    padding: 0 15px;
+    box-sizing: border-box;
+    border: 1px solid rgb(247, 225, 185);
+  }
+  .send-stock-name-to-list {
+    margin-bottom: 0;
+  }
+  .add-input-col {
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+  }
+}
+
+@media (min-width: 900px) {
+  .setting-page {
+    width: 60%;
+    height: 90%;
+  }
+  .add-input-col {
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+  }
+  .send-stock-name-to-list {
+    margin-bottom: 0;
+  }
+  .send-stock-name-to-list {
+    flex: 0 0 50px;
+  }
 }

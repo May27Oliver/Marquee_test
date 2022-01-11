@@ -1,0 +1,130 @@
+.login-page-wrap {
+  background: black;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  margin: auto;
+  width: 100%;
+  height: 100%;
+  z-index: 99;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.login-page {
+  background: white;
+  border-radius: 20px;
+  width: 100%;
+  height: 100%;
+  padding: 0 0 30px 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: rgb(255, 255, 255, 1);
+}
+.login-header {
+  font-family: "Noto Sans TC", sans-serif;
+  height: 100px;
+  margin-top: 100px;
+  color: black;
+  font-weight: bold;
+  font-size: 30px;
+}
+.login-content {
+  padding: 0 60px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  flex: 1;
+}
+.login-title {
+  color: rgb(79, 44, 19);
+  text-align: center;
+  line-height: 45px;
+}
+
+.login-text-field-title,
+.login-text-field-column {
+  width: 100%;
+}
+
+.login-text-field-title {
+  text-align: left;
+  font-weight: bold;
+  font-size: 18px;
+  line-height: 35px;
+  color: rgb(79, 44, 19);
+  line-height: 45px;
+  margin: 10px 0;
+}
+.login-text-field-title.forgot-password,
+.login-text-field-title.error-msg {
+  font-size: 14px;
+  font-weight: normal;
+}
+.login-text-field-title.forgot-password {
+  color: #ccc;
+  cursor: pointer;
+}
+.login-text-field-title.error-msg {
+  color: red;
+}
+.login-text-field-column,
+.login-text-field-column input {
+  height: 45px;
+  width: 100%;
+}
+/* .login-text-field-column {
+  margin: 10px 0;
+} */
+.login-text-field-column input {
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  box-shadow: none;
+  outline: none;
+  padding-left: 10px;
+  font-size: 20px;
+  box-sizing: border-box;
+}
+.button-panel {
+  width: 100%;
+  height: 45px;
+  padding: 0 60px;
+  box-sizing: border-box;
+}
+.submit-button {
+  color: white;
+  line-height: 45px;
+  border-radius: 5px;
+  width: 100%;
+  font-size: 20px;
+  font-weight: bold;
+  background: #ff8033;
+}
+.submit-button:active {
+  background: #c05d1f;
+}
+@media (min-width: 500px) {
+  .login-page {
+    width: 100%;
+  }
+}
+
+@media (min-width: 700px) {
+  .login-page {
+    background: white;
+    border-radius: 20px;
+    width: 50%;
+    height: 90%;
+    padding: 0 0 30px 0;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: rgb(255, 255, 255, 1);
+  }
+}

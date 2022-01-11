@@ -6,25 +6,23 @@ import { useHistory } from "react-router-dom";
 import ImportSetting from "container/ImportSetting";
 import ManageSetting from "container/ManageSetting";
 import ConfigSetting from "container/ConfigSetting";
-
+import { useLoginStateContext } from "context/loginContext";
 const cx = classNames.bind(styles);
 
 interface settingType {
   closeModal: () => void;
 }
 
-const SettingPage: React.FC<settingType> = ({ closeModal }) => {
-  const dispatch = useMarqueeDispatchContext();
+const SettingPage: React.FC<settingType> = () => {
   const [type, setType] = React.useState<"import" | "manage" | "config">(
     "manage"
   );
 
   const history = useHistory();
-
-  const setSymbols = (symbols: string[]) => {
-    dispatch({ type: "SET_MARQUEE_SYMBOLS", payload: symbols });
-  };
-
+  const { login } = useLoginStateContext();
+  if (!login) {
+    history.push("/login");
+  }
   return (
     <div className={cx("setting-page-wrap")}>
       <div className={cx("setting-page")}>
@@ -33,7 +31,6 @@ const SettingPage: React.FC<settingType> = ({ closeModal }) => {
           <div
             className={cx("setting-close")}
             onClick={() => {
-              // closeModal();
               history.push("/marquee");
             }}
           ></div>

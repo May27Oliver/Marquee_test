@@ -89,9 +89,6 @@ const ManageSetting: React.FC = () => {
                   setSearchWords(e.target.value);
                 }}
               />
-              <div className={cx("quick-search-icon")}>
-                <Icons.Search fill="#ccc" width={20} />
-              </div>
             </div>
           </div>
           <div className={cx("column-wrap")}>

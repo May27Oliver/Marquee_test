@@ -13,8 +13,11 @@ class Api {
     //MARQUEE_KGI_URL
     //LOCAL_TEST
     this.axiosMarquee = axios.create({
-      baseURL: getEnv("LOCAL_TEST"),
-      headers: { "Content-Type": "application/json" },
+      baseURL: getEnv("MARQUEE_KGI_URL"),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      withCredentials: true,
       validateStatus: (status) => status === 200,
     });
 
@@ -123,6 +126,14 @@ class Api {
 
   getMarqueeSymbols = async () => {
     return marquee.getMarqueeSymbols(this.axiosMarquee);
+  };
+  //login
+  login = async (acc: string, pass: string) => {
+    return marquee.login(this.axiosMarquee, acc, pass);
+  };
+  //verify login
+  verifyLogin = async (sessionId: string) => {
+    return marquee.verifyLogin(this.axiosMarquee, sessionId);
   };
 }
 
