@@ -135,6 +135,14 @@ class Api {
   verifyLogin = async (sessionId: string) => {
     return marquee.verifyLogin(this.axiosMarquee, sessionId);
   };
+  //get direction
+  getDirection = async () => {
+    return marquee.getDirection(this.axiosMarquee);
+  };
+  //調整方向
+  updateDirection = async (direction: number) => {
+    return marquee.updateDirection(this.axiosMarquee, direction);
+  };
 }
 
 export default new Api();

@@ -20,9 +20,49 @@ const SINGLE_STOCK_WITH = 674;
 interface stockListType {
   symbols: string[];
   speed: number;
+  direction: number;
 }
 
-const AnimeCSpeedTrain: React.FC<stockListType> = ({ symbols, speed }) => {
+const LEFTCONFIG = {
+  lineBeginX: 0,
+  lineEndX: -4515,
+  lastLineBeginX: -2560,
+  lastLineEndX: -4515,
+};
+const RIGHTCONFIG = {
+  lineBeginX: -4515,
+  lineEndX: 0,
+  lastLineBeginX: -4515,
+  lastLineEndX: -2560,
+};
+
+interface DirType {
+  lineBeginX: number;
+  lineEndX: number;
+  lastLineBeginX: number;
+  lastLineEndX: number;
+}
+
+const getDirectionConfig = (direction: number): DirType => {
+  if (direction === 1) {
+    console.log("向左走");
+    return LEFTCONFIG;
+  } else if (direction === 2) {
+    console.log("向右走");
+    return RIGHTCONFIG;
+  }
+  console.log("向左走");
+  return LEFTCONFIG;
+};
+
+const AnimeCSpeedTrain: React.FC<stockListType> = ({
+  symbols,
+  speed,
+  direction,
+}) => {
+  const { lineBeginX, lineEndX, lastLineBeginX, lastLineEndX } =
+    getDirectionConfig(direction);
+
   const LINE_SPEED = speed;
   const SINGLE_MOVE_OUT_SPEED = (674 * LINE_SPEED) / 4515;
   const LAST_LINE_SPEED = (1955 * LINE_SPEED) / 4515;
@@ -82,9 +122,9 @@ const AnimeCSpeedTrain: React.FC<stockListType> = ({ symbols, speed }) => {
     const timeline = gsap.timeline();
     const firstLine = gsap.fromTo(
       refs,
-      { x: 0, y: 0 },
+      { x: lineBeginX, y: 0 },
       {
-        x: -4515,
+        x: lineEndX,
         y: 0,
         duration: LINE_SPEED,
         ease: Linear.easeNone,
@@ -94,9 +134,9 @@ const AnimeCSpeedTrain: React.FC<stockListType> = ({ symbols, speed }) => {
 
     const secondLine = gsap.fromTo(
       refs,
-      { x: 0, y: 178 },
+      { x: lineBeginX, y: 178 },
       {
-        x: -4515,
+        x: lineEndX,
         y: 178,
         duration: LINE_SPEED,
         ease: Linear.easeNone,
@@ -106,9 +146,9 @@ const AnimeCSpeedTrain: React.FC<stockListType> = ({ symbols, speed }) => {
 
     const thirdLine = gsap.fromTo(
       refs,
-      { x: 0, y: 356 },
+      { x: lineBeginX, y: 356 },
       {
-        x: -4515,
+        x: lineEndX,
         y: 356,
         duration: LINE_SPEED,
         ease: Linear.easeNone,
@@ -118,9 +158,9 @@ const AnimeCSpeedTrain: React.FC<stockListType> = ({ symbols, speed }) => {
 
     const lastLine = gsap.fromTo(
       refs,
-      { x: -2560, y: 534 },
+      { x: lastLineBeginX, y: 534 },
       {
-        x: -4515,
+        x: lastLineEndX,
         y: 534,
         duration: LAST_LINE_SPEED,
         ease: Linear.easeNone,
@@ -130,9 +170,9 @@ const AnimeCSpeedTrain: React.FC<stockListType> = ({ symbols, speed }) => {
 
     const adjustFirstLine = gsap.fromTo(
       refs,
-      { x: 0, y: 0 },
+      { x: lineBeginX, y: 0 },
       {
-        x: -4515,
+        x: lineEndX,
         y: 0,
         duration: LINE_SPEED,
         ease: Linear.easeNone,
@@ -141,9 +181,9 @@ const AnimeCSpeedTrain: React.FC<stockListType> = ({ symbols, speed }) => {
     );
     const adjustSecondLine = gsap.fromTo(
       refs,
-      { x: 0, y: 178 },
+      { x: lineBeginX, y: 178 },
       {
-        x: -4515,
+        x: lineEndX,
         y: 178,
         duration: LINE_SPEED,
         ease: Linear.easeNone,
@@ -152,9 +192,9 @@ const AnimeCSpeedTrain: React.FC<stockListType> = ({ symbols, speed }) => {
     );
     const adjustThirdLine = gsap.fromTo(
       refs,
-      { x: 0, y: 356 },
+      { x: lineBeginX, y: 356 },
       {
-        x: -4515,
+        x: lineEndX,
         y: 356,
         duration: LINE_SPEED,
         ease: Linear.easeNone,
@@ -163,9 +203,9 @@ const AnimeCSpeedTrain: React.FC<stockListType> = ({ symbols, speed }) => {
     );
     const adjustLastLine = gsap.fromTo(
       refs,
-      { x: -2560, y: 534 },
+      { x: lastLineBeginX, y: 534 },
       {
-        x: -4515,
+        x: lastLineEndX,
         y: 534,
         duration: LAST_LINE_SPEED,
         ease: Linear.easeNone,
@@ -212,9 +252,9 @@ const AnimeCSpeedTrain: React.FC<stockListType> = ({ symbols, speed }) => {
 
     const firstLine = gsap.fromTo(
       refs,
-      { x: 0, y: 0 },
+      { x: lineBeginX, y: 0 },
       {
-        x: -4515,
+        x: lineEndX,
         y: 0,
         duration: LINE_SPEED,
         ease: Linear.easeNone,
@@ -224,9 +264,9 @@ const AnimeCSpeedTrain: React.FC<stockListType> = ({ symbols, speed }) => {
 
     const secondLine = gsap.fromTo(
       refs,
-      { x: 0, y: 178 },
+      { x: lineBeginX, y: 178 },
       {
-        x: -4515,
+        x: lineEndX,
         y: 178,
         duration: LINE_SPEED,
         ease: Linear.easeNone,
@@ -235,9 +275,9 @@ const AnimeCSpeedTrain: React.FC<stockListType> = ({ symbols, speed }) => {
     ); //左
     const thirdLine = gsap.fromTo(
       refs,
-      { x: 0, y: 356 },
+      { x: lineBeginX, y: 356 },
       {
-        x: -4515,
+        x: lineEndX,
         y: 356,
         duration: LINE_SPEED,
         ease: Linear.easeNone,
@@ -247,9 +287,9 @@ const AnimeCSpeedTrain: React.FC<stockListType> = ({ symbols, speed }) => {
 
     const lastLine = gsap.fromTo(
       refs,
-      { x: -2560, y: 534 },
+      { x: lastLineBeginX, y: 534 },
       {
-        x: -4515,
+        x: lastLineEndX,
         y: 534,
         duration: LAST_LINE_SPEED,
         ease: Linear.easeNone,
@@ -260,9 +300,9 @@ const AnimeCSpeedTrain: React.FC<stockListType> = ({ symbols, speed }) => {
     const initialRefs = refs.filter((_, index) => index < 31);
     const adjustFirstLine = gsap.fromTo(
       initialRefs,
-      { x: 0, y: 0 },
+      { x: lineBeginX, y: 0 },
       {
-        x: -4515,
+        x: lineEndX,
         y: 0,
         duration: LINE_SPEED,
         ease: Linear.easeNone,
@@ -271,9 +311,9 @@ const AnimeCSpeedTrain: React.FC<stockListType> = ({ symbols, speed }) => {
     );
     const adjustSecondLine = gsap.fromTo(
       initialRefs,
-      { x: 0, y: 178 },
+      { x: lineBeginX, y: 178 },
       {
-        x: -4515,
+        x: lineEndX,
         y: 178,
         duration: LINE_SPEED,
         ease: Linear.easeNone,
@@ -282,9 +322,9 @@ const AnimeCSpeedTrain: React.FC<stockListType> = ({ symbols, speed }) => {
     );
     const adjustThirdLine = gsap.fromTo(
       initialRefs,
-      { x: 0, y: 356 },
+      { x: lineBeginX, y: 356 },
       {
-        x: -4515,
+        x: lineEndX,
         y: 356,
         duration: LINE_SPEED,
         ease: Linear.easeNone,
@@ -293,9 +333,9 @@ const AnimeCSpeedTrain: React.FC<stockListType> = ({ symbols, speed }) => {
     );
     const adjustLastLine = gsap.fromTo(
       initialRefs,
-      { x: -2560, y: 534 },
+      { x: lastLineBeginX, y: 534 },
       {
-        x: -4515,
+        x: lastLineEndX,
         y: 534,
         duration: LAST_LINE_SPEED,
         ease: Linear.easeNone,
@@ -429,6 +469,7 @@ const AnimeCSpeedTrain: React.FC<stockListType> = ({ symbols, speed }) => {
           <StockTrain
             repeat={repeat}
             quotes={quotes}
+            direction={direction}
             speed={speed}
             symbols={symbols}
             stockRefs={stockRefs.current}

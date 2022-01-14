@@ -12,6 +12,12 @@ const Login: React.FC = () => {
   const [account, setAccount] = React.useState<string>("");
   const [password, setPassword] = React.useState<string>("");
   const [error, setError] = React.useState<string>("");
+  const getCookie = (name: string): string | undefined => {
+    const value = `;${document.cookie}`;
+    console.log("cookie value", value);
+    const part = value.split(`;${name}=`);
+    return part.pop()?.split(";").shift();
+  };
   let history = useHistory();
 
   React.useEffect(() => {
@@ -21,6 +27,26 @@ const Login: React.FC = () => {
       }, 5000);
     }
   }, [error]);
+
+  React.useEffect(() => {
+    const sessionId = getCookie("sessionId");
+    console.log("cookie sessionId", sessionId);
+    //check有無session在cookie內
+    // if (sessionId === "undefined" || !sessionId) {
+    //   return;
+    // } else {
+    //有cookie，送出驗證api，看這串cookie是不是對的
+    (async () => {
+      const { result } = await api.verifyLogin("sessionId");
+      if (!result) {
+        return;
+      } else {
+        dispatch({ type: "SET_LOGIN", payload: true });
+        history.push("/setting");
+      }
+    })();
+    // }
+  }, []);
 
   return (
     <div className={cx("login-page-wrap")}>
@@ -51,14 +77,6 @@ const Login: React.FC = () => {
               }}
             />
           </div>
-          {/* <div
-            className={cx("login-text-field-title", "forgot-password")}
-            onClick={() => {
-              setError("帳號：kgi 密碼：kgi2330");
-            }}
-          >
-            忘記密碼？
-          </div> */}
           <div className={cx("login-text-field-title", "error-msg")}>
             {error}
           </div>
@@ -73,14 +91,13 @@ const Login: React.FC = () => {
                   return;
                 }
                 const res = await api.login(account, password);
-                console.log("login res", res);
                 if (!res.result) {
                   const { message } = res;
                   setError(message);
                   return;
                 } else {
                   dispatch({ type: "SET_LOGIN", payload: true });
-                  history.push("/marquee");
+                  history.push("/setting");
                 }
               })();
             }}
