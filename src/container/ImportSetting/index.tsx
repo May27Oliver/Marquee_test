@@ -16,6 +16,7 @@ const ImportSetting: React.FC = () => {
 
   const handleCSV = (res: string) => {
     const newRes = res
+      .replaceAll("\r\n", "\n")
       .split("\n")
       .map((item, index) => {
         const [stockName, stockNo, symbol] = item.split(",");
@@ -34,7 +35,7 @@ const ImportSetting: React.FC = () => {
 
   React.useEffect(() => {
     if (importList === null || importList.length === 0) return;
-    const response = api.importSymbols(groupno, importList);
+    api.importSymbols(groupno, importList);
     //跳窗顯示匯入成功
   }, [importList]);
 
@@ -65,11 +66,14 @@ const ImportSetting: React.FC = () => {
               ref={inputRef}
               className={cx("upload-file-input")}
               type="file"
-              accept=".csv"
+              accept=".csv, application/vnd.ms-excel"
               onChange={async (e) => {
                 if (!e.target.files || e.target.files.length === 0) return;
                 const file = e.target.files[0];
-                if (file.type.match("text/csv")) {
+                if (
+                  file.type.match("text/csv") ||
+                  file.type.match("application/vnd.ms-excel")
+                ) {
                   let reader = new FileReader();
                   reader.readAsText(file);
                   reader.onload = (e) => {

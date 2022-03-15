@@ -45,13 +45,10 @@ interface DirType {
 
 const getDirectionConfig = (direction: number): DirType => {
   if (direction === 1) {
-    console.log("向左走");
     return LEFTCONFIG;
   } else if (direction === 2) {
-    console.log("向右走");
     return RIGHTCONFIG;
   }
-  console.log("向左走");
   return LEFTCONFIG;
 };
 

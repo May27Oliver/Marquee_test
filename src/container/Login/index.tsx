@@ -14,7 +14,6 @@ const Login: React.FC = () => {
   const [error, setError] = React.useState<string>("");
   const getCookie = (name: string): string | undefined => {
     const value = `;${document.cookie}`;
-    console.log("cookie value", value);
     const part = value.split(`;${name}=`);
     return part.pop()?.split(";").shift();
   };
@@ -29,8 +28,7 @@ const Login: React.FC = () => {
   }, [error]);
 
   React.useEffect(() => {
-    const sessionId = getCookie("sessionId");
-    console.log("cookie sessionId", sessionId);
+    // const sessionId = getCookie("sessionId");
     //check有無session在cookie內
     // if (sessionId === "undefined" || !sessionId) {
     //   return;

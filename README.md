@@ -52,3 +52,38 @@
 
 20.完成匯入新增更改群組播放查詢等功能
 因為有 Network low balance，所以現在上版要上兩個地方。
+
+## 打包與上版
+
+因為有 Network low balance，所以現在上版要上兩個地方。<br>
+60.250.174.223<br>
+<br>
+192.168.192.225<br>
+
+### 打包前記得要換 api 路徑：cod
+
+檔案位置：<br>
+src/api/index.tsx Line.16 行<br>
+
+#### 打包時：
+
+baseURL: getEnv("MARQUEE_KGI_URL"),<br>
+
+#### 開發時
+
+baseURL: getEnv("LOCAL_TEST"),<br>
+
+### 打包指令
+
+yarn run build<br>
+-r 是整個目錄以及其下檔案一起複製的指令<br>
+
+#### to 223
+
+scp -r ./build/* root@60.250.174.223:/apex/VIP20/WebAdapter/static/elecScroll<br>
+
+#### to 225 不能直接在本地端傳到 225，要透過 223 跳板傳輸，先到以下路徑:
+
+root@60.250.174.223:/VIP20/WebAdapter/static<br>
+<br>
+scp -r ./elecScroll/* root@192.168.192.225:/apex/VIP20/WebAdapter/static/elecScroll
